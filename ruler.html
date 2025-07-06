@@ -44,49 +44,73 @@
         }
 
         .controls {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 10px;
+            margin: 20px 0;
+        }
+
+        .btn {
+            padding: 15px;
+            font-size: 16px;
+            border-radius: 8px;
+            border: none;
+            background: #3498db;
+            color: white;
+            touch-action: manipulation;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .btn:active {
+            transform: translateY(1px);
+        }
+
+        .lesson-info {
+            text-align: center;
+            margin-bottom: 30px;
+            color: #00ffff;
+            text-shadow: 0 0 10px rgba(0, 255, 255, 0.5);
+        }
+
+        .lesson-info h2 {
+            font-size: 2em;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .lesson-info p {
+            font-size: 1.2em;
+            opacity: 0.8;
+            font-family: 'Courier New', monospace;
+        }
+
+        .lesson-selector {
             display: flex;
             justify-content: center;
-            gap: 20px;
+            gap: 10px;
             margin-bottom: 30px;
             flex-wrap: wrap;
         }
 
-        .btn {
-            background: linear-gradient(45deg, #00ffff, #0088ff);
-            color: #000;
-            border: none;
+        .lesson-btn {
+            background: transparent;
+            border: 2px solid #00ffff;
+            color: #00ffff;
             padding: 12px 24px;
-            font-size: 1em;
-            font-weight: bold;
-            cursor: pointer;
             border-radius: 5px;
+            cursor: pointer;
             transition: all 0.3s ease;
+            font-size: 16px;
             text-transform: uppercase;
             letter-spacing: 1px;
         }
 
-        .btn:hover {
+        .lesson-btn:hover, 
+        .lesson-btn.active {
+            background: rgba(0, 255, 255, 0.2);
+            box-shadow: 0 0 20px rgba(0, 255, 255, 0.4);
             transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(0, 255, 255, 0.3);
-        }
-
-        .btn:active {
-            transform: translateY(0);
-        }
-
-        .lesson-info {
-            background: rgba(0, 255, 255, 0.1);
-            border: 2px solid #00ffff;
-            border-radius: 10px;
-            padding: 20px;
-            margin-bottom: 30px;
-            text-align: center;
-        }
-
-        .lesson-info h2 {
-            margin-bottom: 15px;
-            font-size: 1.8em;
-            text-shadow: 0 0 5px #00ffff;
         }
 
         .measuring-area {
@@ -102,120 +126,161 @@
         .tape-container {
             position: relative;
             height: 160px;
-            background: linear-gradient(to bottom, #1a1a2e, #16213e);
+            background: #1a1a1a;
             border-radius: 10px;
-            overflow: hidden;
-            margin-bottom: 20px;
-            border: 2px solid #00ffff;
+            overflow-x: scroll;
+            overflow-y: hidden;
+            margin: 20px 0;
+            -webkit-overflow-scrolling: touch;
+            scroll-behavior: smooth;
+            cursor: grab;
+            width: 100%;
+            max-width: 100vw;
+            padding: 20px;
         }
 
         .tape {
-            position: absolute;
-            top: 20px;
-            left: 0;
+            position: relative;
             height: 120px;
-            background: linear-gradient(to bottom, #ffff00, #ffdd00);
-            border: 2px solid #00ffff;
+            background: transparent;
+            border: none;
             border-radius: 5px;
-            transition: all 0.3s ease;
-            min-width: 800px;
-            box-shadow: 0 5px 15px rgba(0, 255, 255, 0.2);
+            width: calc(72px * 12 * var(--device-pixel-ratio, 1));
+            min-width: 100%;
         }
 
         .tape-marks {
             position: absolute;
             top: 0;
             left: 0;
-            width: 100%;
-            height: 100%;
+            right: 0;
+            bottom: 0;
+            pointer-events: none;
         }
 
         .mark {
             position: absolute;
-            background: #000;
-            transform-origin: top;
-            border-radius: 1px;
+            background: #fff;
+            width: 1px;
+            top: 0;
         }
 
         .mark.inch {
-            width: 3px;
             height: 80px;
-            top: 10px;
-            background: #000;
-            border-left: 1px solid #333;
+            width: 2px;
         }
 
         .mark.half {
-            width: 2.5px;
             height: 60px;
-            top: 20px;
-            background: #222;
         }
 
         .mark.quarter {
-            width: 2px;
             height: 45px;
-            top: 27.5px;
-            background: #444;
         }
 
         .mark.eighth {
-            width: 1.5px;
-            height: 30px;
-            top: 35px;
-            background: #666;
-        }
-
-        .mark.sixteenth {
-            width: 1px;
-            height: 20px;
-            top: 40px;
-            background: #888;
+            height: 35px;
         }
 
         .number {
             position: absolute;
             font-size: 14px;
             font-weight: bold;
-            color: #000;
-            top: 2px;
+            color: #fff;
+            top: 85px;
             transform: translateX(-50%);
-            text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.5);
+            padding: 2px 4px;
+            z-index: 2;
         }
 
         .fraction-label {
             position: absolute;
-            font-size: 10px;
-            font-weight: bold;
-            color: #000;
+            font-size: 11px;
+            color: #fff;
+            top: 65px;
             transform: translateX(-50%);
-            text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.5);
+            padding: 1px 3px;
+            z-index: 2;
+            white-space: nowrap;
         }
 
         .fraction-label.half {
-            top: 75px;
+            font-weight: bold;
+            font-size: 12px;
         }
 
         .fraction-label.quarter {
-            top: 70px;
+            font-size: 11px;
         }
 
-        .fraction-label.eighth {
-            top: 68px;
-        }
-
+        .fraction-label.eighth,
         .fraction-label.sixteenth {
-            top: 65px;
+            font-size: 10px;
+            top: 55px;
+        }
+
+        .fraction-label.top {
+            top: 5px;
+            font-size: 10px;
+        }
+
+        @media (max-width: 768px) {
+            .tape-container {
+                height: 160px;
+                margin: 20px 0;
+                border-radius: 10px;
+                padding: 20px;
+            }
+
+            .tape {
+                height: 120px;
+            }
+
+            .mark {
+                background: #fff;
+            }
+
+            .mark.inch {
+                height: 80px;
+            }
+
+            .mark.half {
+                height: 60px;
+            }
+
+            .mark.quarter {
+                height: 45px;
+            }
+
+            .mark.eighth {
+                height: 35px;
+            }
+
+            .mark.sixteenth {
+                height: 20px;
+            }
+
+            .number {
+                top: 85px;
+                font-size: 14px;
+            }
+
+            .fraction-label {
+                top: 65px;
+                font-size: 11px;
+            }
+
+            .fraction-label.top {
+                display: block;
+            }
         }
 
         .pointer {
             position: absolute;
-            top: -15px;
-            width: 4px;
-            height: 150px;
-            background: linear-gradient(to bottom, #ff0000, #cc0000);
-            border-radius: 2px;
-            box-shadow: 0 0 15px #ff0000, 0 0 30px rgba(255, 0, 0, 0.5);
+            top: 0;
+            width: 3px;
+            height: 120px;
+            background: #ff0000;
             z-index: 10;
             transition: left 0.3s ease;
         }
@@ -223,27 +288,13 @@
         .pointer::before {
             content: '';
             position: absolute;
-            top: -15px;
-            left: -8px;
+            top: -10px;
+            left: -5px;
             width: 0;
             height: 0;
-            border-left: 10px solid transparent;
-            border-right: 10px solid transparent;
-            border-top: 15px solid #ff0000;
-            filter: drop-shadow(0 0 5px #ff0000);
-        }
-
-        .pointer::after {
-            content: '';
-            position: absolute;
-            bottom: -10px;
-            left: -6px;
-            width: 0;
-            height: 0;
-            border-left: 8px solid transparent;
-            border-right: 8px solid transparent;
-            border-bottom: 10px solid #ff0000;
-            filter: drop-shadow(0 0 5px #ff0000);
+            border-left: 6px solid transparent;
+            border-right: 6px solid transparent;
+            border-top: 10px solid #ff0000;
         }
 
         .reading-display {
@@ -267,12 +318,8 @@
             text-shadow: 0 0 10px #ffff00;
         }
 
-        .quiz-section {
-            background: rgba(255, 255, 0, 0.1);
-            border: 2px solid #ffff00;
-            border-radius: 10px;
-            padding: 20px;
-            margin-bottom: 20px;
+        .reading-display .controls {
+            margin-top: 20px;
         }
 
         .quiz-question {
@@ -351,43 +398,43 @@
             color: #00ffff;
         }
 
-        .lesson-selector {
+        .color-buttons {
             display: flex;
             justify-content: center;
             gap: 10px;
             margin-bottom: 20px;
-            flex-wrap: wrap;
         }
 
-        .lesson-btn {
-            background: rgba(0, 255, 255, 0.2);
-            border: 2px solid #00ffff;
-            color: #00ffff;
+        .color-btn {
             padding: 10px 20px;
             border-radius: 5px;
+            border: none;
             cursor: pointer;
             transition: all 0.3s ease;
+            font-weight: bold;
         }
 
-        .lesson-btn:hover, .lesson-btn.active {
-            background: rgba(0, 255, 255, 0.4);
+        .color-btn.dark {
+            background: #1a1a1a;
+            color: #fff;
+            border: 1px solid #333;
+        }
+
+        .color-btn.yellow {
+            background: #ffdd00;
+            color: #000;
+        }
+
+        .color-btn.green {
+            background: #39ff14;
+            color: #000;
+        }
+
+        .color-btn.active {
             transform: translateY(-2px);
         }
 
-        @media (max-width: 768px) {
-            .controls {
-                flex-direction: column;
-                align-items: center;
-            }
-            
-            .header h1 {
-                font-size: 2em;
-            }
-            
-            .tape {
-                min-width: 600px;
-            }
-        }
+        /* Mobile-first responsive design */
     </style>
 </head>
 <body>
@@ -397,6 +444,11 @@
             <p>Master the art of precise measurement</p>
         </div>
 
+        <div class="lesson-info">
+            <h2 id="lesson-title">Basic Measuring Tape Reading</h2>
+            <p id="lesson-description">Learn to read whole inches and major fractions on a measuring tape.</p>
+        </div>
+
         <div class="lesson-selector">
             <button class="lesson-btn active" onclick="setLesson('basic')">Basic Reading</button>
             <button class="lesson-btn" onclick="setLesson('fractions')">Fractions</button>
@@ -404,19 +456,13 @@
             <button class="lesson-btn" onclick="setLesson('quiz')">Quiz Mode</button>
         </div>
 
-        <div class="lesson-info">
-            <h2 id="lesson-title">Basic Measuring Tape Reading</h2>
-            <p id="lesson-description">Learn to read whole inches and major fractions on a measuring tape.</p>
-        </div>
-
-        <div class="controls">
-            <button class="btn" onclick="generateRandomMeasurement()">New Measurement</button>
-            <button class="btn" onclick="showAnswer()">Show Answer</button>
-            <button class="btn" onclick="resetTape()">Reset</button>
-        </div>
-
         <div class="measuring-area">
-            <div class="tape-container">
+            <div class="color-buttons">
+                <button class="color-btn dark active" onclick="changeColor('#1a1a1a', '#fff')">Dark</button>
+                <button class="color-btn yellow" onclick="changeColor('#ffdd00', '#000')">Yellow</button>
+                <button class="color-btn green" onclick="changeColor('#39ff14', '#000')">Neon Green</button>
+            </div>
+            <div class="tape-container" style="background-color: #1a1a1a;">
                 <div class="tape" id="tape">
                     <div class="tape-marks" id="tape-marks"></div>
                     <div class="pointer" id="pointer"></div>
@@ -425,17 +471,18 @@
 
             <div class="reading-display">
                 <h3>Current Reading</h3>
-                <div class="reading-value" id="reading-value">Click "New Measurement" to start</div>
+                <div class="reading-value" id="reading-value">Click 'New Measurement' to start</div>
+                <div class="quiz-question" id="quiz-question" style="display: none;">What is the measurement shown?</div>
+                <div class="controls">
+                    <button class="btn" onclick="generateRandomMeasurement()">New Measurement</button>
+                    <button class="btn" onclick="showAnswer()">Show Answer</button>
+                    <button class="btn" onclick="resetTape()">Reset</button>
+                    <div class="quiz-controls" style="display: none;">
+                        <input type="text" class="quiz-input" id="quiz-input" placeholder="Enter measurement">
+                        <button class="btn" onclick="checkAnswer()">Check</button>
+                    </div>
+                </div>
             </div>
-        </div>
-
-        <div class="quiz-section" id="quiz-section" style="display: none;">
-            <div class="quiz-question" id="quiz-question">What is the measurement shown?</div>
-            <div style="text-align: center;">
-                <input type="text" class="quiz-input" id="quiz-input" placeholder="Enter measurement">
-                <button class="btn" onclick="checkAnswer()">Check</button>
-            </div>
-            <div class="quiz-feedback" id="quiz-feedback"></div>
         </div>
 
         <div class="score" id="score">Score: 0/0</div>
@@ -506,94 +553,147 @@
         };
 
         function initializeTape() {
-            const tape = document.getElementById('tape');
             const marksContainer = document.getElementById('tape-marks');
-            
-            // Clear existing marks
             marksContainer.innerHTML = '';
+            
+            // Calculate pixels per inch based on device pixel ratio
+            const basePixelsPerInch = 72;
+            const pixelsPerInch = basePixelsPerInch * (window.devicePixelRatio || 1);
             
             // Create marks for 12 inches
             for (let inch = 0; inch <= 12; inch++) {
-                const position = inch * 64; // 64px per inch
+                const position = inch * pixelsPerInch;
                 
                 // Inch marks
-                const inchMark = document.createElement('div');
-                inchMark.className = 'mark inch';
-                inchMark.style.left = position + 'px';
-                marksContainer.appendChild(inchMark);
+                createMark('inch', position);
+                createNumber(inch, position);
                 
-                // Inch numbers
-                if (inch > 0) {
-                    const number = document.createElement('div');
-                    number.className = 'number';
-                    number.textContent = inch;
-                    number.style.left = position + 'px';
-                    marksContainer.appendChild(number);
-                }
-                
-                // Fractional marks within each inch
                 if (inch < 12) {
-                    // Create all 16 divisions for this inch
+                    // Create all divisions for this inch
                     for (let division = 1; division < 16; division++) {
-                        const divisionPosition = position + (division * 4); // 4px per sixteenth
+                        const divisionPosition = position + (division * pixelsPerInch / 16);
                         
                         if (division === 8) {
                             // Half inch (8/16)
-                            const halfMark = document.createElement('div');
-                            halfMark.className = 'mark half';
-                            halfMark.style.left = divisionPosition + 'px';
-                            marksContainer.appendChild(halfMark);
-                            
-                            const halfLabel = document.createElement('div');
-                            halfLabel.className = 'fraction-label half';
-                            halfLabel.textContent = '1/2';
-                            halfLabel.style.left = divisionPosition + 'px';
-                            marksContainer.appendChild(halfLabel);
-                        } else if (division % 4 === 0) {
+                            createMark('half', divisionPosition);
+                            createFractionLabel('1/2', divisionPosition, 'half');
+                        } else if (division === 4 || division === 12) {
                             // Quarter inches (4/16, 12/16)
-                            const quarterMark = document.createElement('div');
-                            quarterMark.className = 'mark quarter';
-                            quarterMark.style.left = divisionPosition + 'px';
-                            marksContainer.appendChild(quarterMark);
-                            
-                            const quarterLabel = document.createElement('div');
-                            quarterLabel.className = 'fraction-label quarter';
-                            quarterLabel.textContent = division === 4 ? '1/4' : '3/4';
-                            quarterLabel.style.left = divisionPosition + 'px';
-                            marksContainer.appendChild(quarterLabel);
-                        } else if (division % 2 === 0) {
+                            createMark('quarter', divisionPosition);
+                            createFractionLabel(division === 4 ? '1/4' : '3/4', divisionPosition, 'quarter');
+                        } else if (division === 2 || division === 6 || division === 10 || division === 14) {
                             // Eighth inches (2/16, 6/16, 10/16, 14/16)
-                            const eighthMark = document.createElement('div');
-                            eighthMark.className = 'mark eighth';
-                            eighthMark.style.left = divisionPosition + 'px';
-                            marksContainer.appendChild(eighthMark);
-                            
-                            const eighthLabel = document.createElement('div');
-                            eighthLabel.className = 'fraction-label eighth';
-                            const eighthValue = division === 2 ? '1/8' : division === 6 ? '3/8' : division === 10 ? '5/8' : '7/8';
-                            eighthLabel.textContent = eighthValue;
-                            eighthLabel.style.left = divisionPosition + 'px';
-                            marksContainer.appendChild(eighthLabel);
-                        } else {
-                            // Sixteenth inches (odd numbers)
-                            const sixteenthMark = document.createElement('div');
-                            sixteenthMark.className = 'mark sixteenth';
-                            sixteenthMark.style.left = divisionPosition + 'px';
-                            marksContainer.appendChild(sixteenthMark);
-                            
-                            // Only label some sixteenths to avoid clutter
-                            if (division === 1 || division === 3 || division === 5 || division === 7 || 
-                                division === 9 || division === 11 || division === 13 || division === 15) {
-                                const sixteenthLabel = document.createElement('div');
-                                sixteenthLabel.className = 'fraction-label sixteenth';
-                                sixteenthLabel.textContent = division + '/16';
-                                sixteenthLabel.style.left = divisionPosition + 'px';
-                                marksContainer.appendChild(sixteenthLabel);
-                            }
+                            createMark('eighth', divisionPosition);
+                            createFractionLabel(
+                                division === 2 ? '1/8' : 
+                                division === 6 ? '3/8' : 
+                                division === 10 ? '5/8' : '7/8', 
+                                divisionPosition,
+                                'eighth'
+                            );
                         }
                     }
                 }
             }
+        }
+
+        // Helper functions to create marks and labels
+        function createMark(type, position) {
+            const mark = document.createElement('div');
+            mark.className = `mark ${type}`;
+            mark.style.left = `${Math.round(position)}px`;
+            document.getElementById('tape-marks').appendChild(mark);
+        }
+
+        function createNumber(value, position) {
+            const number = document.createElement('div');
+            number.className = 'number';
+            number.textContent = value;
+            number.style.left = `${Math.round(position)}px`;
+            document.getElementById('tape-marks').appendChild(number);
+        }
+
+        function createFractionLabel(text, position, type) {
+            const label = document.createElement('div');
+            label.className = `fraction-label ${type}`;
+            label.textContent = text;
+            label.style.left = `${Math.round(position)}px`;
+            document.getElementById('tape-marks').appendChild(label);
+        }
+
+        function movePointer(measurement) {
+            const pointer = document.getElementById('pointer');
+            const container = document.querySelector('.tape-container');
+            const pixelsPerInch = 72 * (window.devicePixelRatio || 1);
+            const position = measurement * pixelsPerInch;
+            
+            // Move the pointer
+            pointer.style.left = `${position}px`;
+            
+            // Auto-scroll to keep measurement in view
+            const containerWidth = container.offsetWidth;
+            const scrollPosition = Math.max(0, position - (containerWidth / 3));
+            
+            container.scrollTo({
+                left: scrollPosition,
+                behavior: 'smooth'
+            });
+        }
+
+        function initializeMobileScroll() {
+            const container = document.querySelector('.tape-container');
+            let isScrolling = false;
+            let startX;
+            let scrollLeft;
+            
+            // Touch events for mobile
+            container.addEventListener('touchstart', (e) => {
+                isScrolling = true;
+                startX = e.touches[0].pageX - container.offsetLeft;
+                scrollLeft = container.scrollLeft;
+            });
+
+            container.addEventListener('touchmove', (e) => {
+                if (!isScrolling) return;
+                e.preventDefault();
+                const x = e.touches[0].pageX - container.offsetLeft;
+                const walk = (x - startX) * 1.5; // Increased sensitivity
+                container.scrollLeft = scrollLeft - walk;
+            });
+
+            container.addEventListener('touchend', () => {
+                isScrolling = false;
+            });
+
+            // Mouse events for desktop
+            container.addEventListener('mousedown', (e) => {
+                isScrolling = true;
+                startX = e.pageX - container.offsetLeft;
+                scrollLeft = container.scrollLeft;
+            });
+
+            container.addEventListener('mousemove', (e) => {
+                if (!isScrolling) return;
+                e.preventDefault();
+                const x = e.pageX - container.offsetLeft;
+                const walk = (x - startX) * 1.5;
+                container.scrollLeft = scrollLeft - walk;
+            });
+
+            container.addEventListener('mouseup', () => {
+                isScrolling = false;
+            });
+
+            container.addEventListener('mouseleave', () => {
+                isScrolling = false;
+            });
+
+            // Prevent text selection while scrolling
+            container.addEventListener('selectstart', (e) => {
+                if (isScrolling) {
+                    e.preventDefault();
+                }
+            });
         }
 
         function setLesson(lesson) {
@@ -616,7 +716,8 @@
             });
             
             // Show/hide quiz section
-            document.getElementById('quiz-section').style.display = quizMode ? 'block' : 'none';
+            document.getElementById('quiz-question').style.display = quizMode ? 'block' : 'none';
+            document.querySelector('.quiz-controls').style.display = quizMode ? 'block' : 'none';
             
             // Reset score when changing lessons
             if (quizMode) {
@@ -655,12 +756,6 @@
             } else {
                 document.getElementById('reading-value').textContent = formatMeasurement(measurement);
             }
-        }
-
-        function movePointer(measurement) {
-            const pointer = document.getElementById('pointer');
-            const position = measurement * 64; // 64px per inch
-            pointer.style.left = position + 'px';
         }
 
         function formatMeasurement(measurement) {
@@ -732,6 +827,15 @@
             document.getElementById('score').textContent = `Score: ${score.correct}/${score.total} (${percentage}%)`;
         }
 
+        function changeColor(color, markColor) {
+            document.querySelector('.tape-container').style.backgroundColor = color;
+            document.querySelectorAll('.mark').forEach(mark => mark.style.background = markColor);
+            document.querySelectorAll('.number').forEach(number => number.style.color = markColor);
+            document.querySelectorAll('.fraction-label').forEach(label => label.style.color = markColor);
+            document.querySelectorAll('.color-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+        }
+
         // Enter key support for quiz
         document.getElementById('quiz-input').addEventListener('keypress', function(e) {
             if (e.key === 'Enter') {
@@ -740,8 +844,9 @@
         });
 
         // Initialize the tape when page loads
-        window.addEventListener('load', function() {
+        document.addEventListener('DOMContentLoaded', () => {
             initializeTape();
+            initializeMobileScroll();
             generateRandomMeasurement();
         });
     </script>
