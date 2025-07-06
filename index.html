@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Electrician's Toolkit</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            min-height: 100vh;
+            color: #fff;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            padding: 40px 0;
+            margin-bottom: 40px;
+            border-bottom: 2px solid #00ffff;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            color: #00ffff;
+            text-shadow: 0 0 10px rgba(0, 255, 255, 0.5);
+        }
+
+        .header p {
+            color: #88ffff;
+            font-size: 1.2em;
+        }
+
+        .tools-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            padding: 20px;
+        }
+
+        .tool-card {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 25px;
+            text-align: center;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border: 2px solid transparent;
+            cursor: pointer;
+            text-decoration: none;
+            color: #fff;
+        }
+
+        .tool-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 255, 255, 0.2);
+            border-color: #00ffff;
+        }
+
+        .tool-card h2 {
+            color: #00ffff;
+            margin-bottom: 15px;
+            font-size: 1.8em;
+        }
+
+        .tool-card p {
+            color: #88ffff;
+            margin-bottom: 20px;
+            line-height: 1.6;
+        }
+
+        .tool-card .icon {
+            font-size: 3em;
+            margin-bottom: 20px;
+            color: #00ffff;
+        }
+
+        .coming-soon {
+            opacity: 0.7;
+            cursor: not-allowed;
+        }
+
+        .coming-soon:hover {
+            transform: none;
+            border-color: transparent;
+        }
+
+        @media (max-width: 768px) {
+            .tools-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .header h1 {
+                font-size: 2em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>⚡ Electrician's Toolkit</h1>
+            <p>Essential digital tools for electrical trades</p>
+        </header>
+
+        <div class="tools-grid">
+            <a href="ruler.html" class="tool-card">
+                <div class="icon">📏</div>
+                <h2>Measuring Tape Simulator</h2>
+                <p>Practice reading measurements with an interactive digital measuring tape. Perfect for learning fractions and precise measurements.</p>
+            </a>
+
+            <a href="calculator.html" class="tool-card">
+                <div class="icon">⚡</div>
+                <h2>Trades Math Calculator</h2>
+                <p>Calculate electrical values using Ohm's Law and Watt's Law with an interactive triangle diagram.</p>
+            </a>
+
+            <div class="tool-card coming-soon">
+                <div class="icon">🔌</div>
+                <h2>Digital Multimeter</h2>
+                <p>Coming Soon: Practice using a digital multimeter in various scenarios. Learn voltage, current, and resistance measurements.</p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
