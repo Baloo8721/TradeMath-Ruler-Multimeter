@@ -1,0 +1,727 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Digital Multimeter Simulator</title>
+    <style>
+        :root {
+            --meter-red: #ff3b30;
+            --meter-body: #1a1a1a;
+            --meter-screen: #c8d8c8;
+            --meter-text: #2a2a2a;
+            --meter-highlight: rgba(255,255,255,0.1);
+        }
+
+        @font-face {
+            font-family: 'Digital';
+            src: url('https://fonts.cdnfonts.com/css/digital-7-mono') format('woff2');
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            background: #1a1a1a;
+            color: #fff;
+            perspective: 1000px;
+        }
+
+        .container {
+            display: flex;
+            flex-direction: column;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            gap: 20px;
+            align-items: center;
+        }
+
+        .multimeter {
+            width: 400px;
+            height: 800px;
+            background: var(--meter-red);
+            border-radius: 30px 30px 60px 60px;
+            position: relative;
+            padding: 40px 20px;
+        }
+
+        .clamp-head {
+            width: 200px;
+            height: 300px;
+            background: var(--meter-red);
+            position: absolute;
+            top: -250px;
+            left: 50%;
+            transform: translateX(-50%);
+            border-radius: 100px 100px 0 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .clamp-opening {
+            width: 80px;
+            height: 160px;
+            background: var(--meter-body);
+            border-radius: 40px;
+        }
+
+        .screen {
+            width: 90%;
+            height: 180px;
+            margin: 20px auto;
+            background: var(--meter-screen);
+            border-radius: 10px;
+            padding: 15px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .screen-value {
+            font-family: 'Digital', monospace;
+            font-size: 3em;
+            color: var(--meter-text);
+            text-align: right;
+            margin-top: auto;
+        }
+
+        .screen-indicators {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.8em;
+            color: var(--meter-text);
+        }
+
+        .dial-section {
+            position: relative;
+            width: 300px;
+            height: 300px;
+            margin: 20px;
+        }
+
+        .dial-ring {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+        }
+
+        .dial {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: #222;
+            border-radius: 50%;
+            transition: transform 0.3s ease;
+            cursor: pointer;
+        }
+
+        .dial-selector {
+            position: absolute;
+            top: -5px;
+            left: 50%;
+            width: 4px;
+            height: 25px;
+            background: #ff0000;
+            transform: translateX(-50%);
+            border-radius: 2px;
+            box-shadow: 0 0 5px rgba(255,0,0,0.5);
+        }
+
+        .dial-marker {
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            width: 40px;
+            height: 20px;
+            margin-left: -20px;
+            margin-top: -10px;
+            text-align: center;
+            color: white;
+            font-size: 14px;
+            line-height: 20px;
+            transform-origin: center;
+            pointer-events: none;
+        }
+
+        .ports {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 40px;
+            background: var(--meter-body);
+            padding: 20px;
+            border-radius: 15px;
+        }
+
+        .port {
+            width: 40px;
+            height: 40px;
+            background: var(--meter-red);
+            border-radius: 50%;
+            position: relative;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .port::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 20px;
+            height: 20px;
+            background: #333;
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        .port.connected::after {
+            background: #666;
+        }
+
+        .port-label {
+            text-align: center;
+            font-size: 0.8em;
+            margin-top: 10px;
+            color: white;
+        }
+
+        .controls {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 30px;
+        }
+
+        .button {
+            padding: 10px 20px;
+            background: var(--meter-body);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .button:hover {
+            background: #333;
+        }
+
+        .button.active {
+            background: #444;
+        }
+
+        .help-panel {
+            width: 100%;
+            background: rgba(255,255,255,0.1);
+            padding: 20px;
+            border-radius: 10px;
+            max-height: 600px;
+            overflow-y: auto;
+            color: #fff;
+            margin-top: 30px;
+        }
+
+        .help-panel h2 {
+            color: #00ffff;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #00ffff;
+            padding-bottom: 10px;
+        }
+
+        .help-panel h3 {
+            color: #00ffff;
+            margin: 15px 0;
+        }
+
+        .help-panel h4 {
+            color: #88ffff;
+            margin: 10px 0;
+        }
+
+        .steps ol {
+            padding-left: 20px;
+            margin: 10px 0;
+        }
+
+        .steps li {
+            margin: 5px 0;
+            line-height: 1.4;
+        }
+
+        .warning {
+            background: rgba(255, 0, 0, 0.1);
+            border-left: 4px solid #ff0000;
+            padding: 10px;
+            margin: 15px 0;
+        }
+
+        .uses ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .uses li {
+            margin: 5px 0;
+            padding-left: 20px;
+            position: relative;
+        }
+
+        .uses li:before {
+            content: '•';
+            color: #00ffff;
+            position: absolute;
+            left: 0;
+        }
+
+        .measurement-guide {
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .measurement-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .measurement-list li {
+            background: rgba(0,0,0,0.2);
+            margin: 10px 0;
+            padding: 15px;
+            border-radius: 5px;
+            border-left: 4px solid #00ffff;
+        }
+
+        .measurement-list strong {
+            color: #00ffff;
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .measurement-list p {
+            margin: 0;
+            color: #88ffff;
+            font-size: 0.9em;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="multimeter">
+            <div class="clamp-head">
+                <div class="clamp-opening"></div>
+            </div>
+            <div class="screen">
+                <div class="screen-indicators">
+                    <span class="mode">AC V</span>
+                    <span class="auto">AUTO</span>
+                    <span class="hold">HOLD</span>
+                </div>
+                <div class="screen-value">0.00</div>
+            </div>
+            <div class="dial-section">
+                <div class="dial" id="dial">
+                    <div class="dial-selector"></div>
+                </div>
+                <div class="dial-ring" id="dial-ring">
+                    <!-- Dial markers will be added by JavaScript -->
+                </div>
+            </div>
+            <div class="ports">
+                <div class="port-group">
+                    <div class="port" id="com-port"></div>
+                    <div class="port-label">COM</div>
+                </div>
+                <div class="port-group">
+                    <div class="port" id="vohm-port"></div>
+                    <div class="port-label">VΩ</div>
+                </div>
+                <div class="port-group">
+                    <div class="port" id="temp-port"></div>
+                    <div class="port-label">TEMP</div>
+                </div>
+            </div>
+            <div class="controls">
+                <button class="button" id="select">SELECT</button>
+                <button class="button" id="hold">HOLD</button>
+                <button class="button" id="rel">REL</button>
+            </div>
+        </div>
+
+        <div class="help-panel">
+            <h2>⚡ How to Use the Multimeter</h2>
+            <div id="current-mode-help">
+                <!-- Dynamic help content will be inserted here -->
+            </div>
+
+            <div class="measurement-guide">
+                <h3>Available Measurements</h3>
+                <ul class="measurement-list">
+                    <li>
+                        <strong>AC Current (A~)</strong>
+                        <p>Use clamp only, no leads needed</p>
+                    </li>
+                    <li>
+                        <strong>DC Current (A—)</strong>
+                        <p>Use clamp only, press REL to zero</p>
+                    </li>
+                    <li>
+                        <strong>AC/DC Voltage</strong>
+                        <p>Red → VΩ, Black → COM</p>
+                    </li>
+                    <li>
+                        <strong>Resistance (Ω)</strong>
+                        <p>Red → VΩ, Black → COM</p>
+                    </li>
+                    <li>
+                        <strong>Continuity (🔔)</strong>
+                        <p>Red → VΩ, Black → COM</p>
+                    </li>
+                    <li>
+                        <strong>Temperature</strong>
+                        <p>Use TEMP port with probe</p>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const HELP_CONTENT = {
+            ACA: {
+                title: 'AC Current Measurement',
+                steps: [
+                    'Set dial to A~ or ACA',
+                    'Open clamp and place around ONE conductor only',
+                    'Ensure clamp is fully closed',
+                    'Read the current value'
+                ],
+                warning: 'Do not clamp around multiple wires or whole cables',
+                uses: [
+                    'Check circuit amp draw',
+                    'Measure motor current',
+                    'Check for overloads'
+                ]
+            },
+            DCA: {
+                title: 'DC Current Measurement',
+                steps: [
+                    'Set dial to A— or DCA',
+                    'Press REL to zero the clamp',
+                    'Clamp around one wire',
+                    'Read the current value'
+                ],
+                warning: 'Ensure proper orientation for DC current',
+                uses: [
+                    'Test solar systems',
+                    'Check battery current',
+                    'Measure DC motor load'
+                ]
+            },
+            VOLTAGE: {
+                title: 'Voltage Measurement',
+                steps: [
+                    'Set dial to V~ (AC) or V— (DC)',
+                    'Connect BLACK lead to COM',
+                    'Connect RED lead to VΩ',
+                    'Touch probes to test points'
+                ],
+                warning: 'Verify voltage type (AC/DC) before measuring',
+                uses: [
+                    'Check outlet voltage',
+                    'Test battery voltage',
+                    'Verify power supply output'
+                ]
+            }
+        };
+
+        class Multimeter {
+            constructor() {
+                this.mode = 'OFF';
+                this.currentRotation = 0;
+                this.screenValue = document.querySelector('.screen-value');
+                this.screenMode = document.querySelector('.screen-indicators .mode');
+                this.screenAuto = document.querySelector('.screen-indicators .auto');
+                this.screenHold = document.querySelector('.screen-indicators .hold');
+                this.dial = document.querySelector('#dial');
+                this.dialRing = document.querySelector('#dial-ring');
+                this.helpPanel = document.querySelector('#current-mode-help');
+                
+                // Initialize audio context
+                this.audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                
+                this.setupControls();
+                this.setupDial();
+                this.setupHelp();
+                this.setupSounds();
+                
+                // Initialize to OFF position
+                this.setMode('OFF');
+                this.updateDisplay();
+            }
+
+            setupSounds() {
+                // Create click sound
+                this.createClickSound = () => {
+                    const oscillator = this.audioContext.createOscillator();
+                    const gainNode = this.audioContext.createGain();
+                    
+                    oscillator.type = 'square';
+                    oscillator.frequency.setValueAtTime(2000, this.audioContext.currentTime);
+                    
+                    gainNode.gain.setValueAtTime(0.1, this.audioContext.currentTime);
+                    gainNode.gain.exponentialRampToValueAtTime(0.01, this.audioContext.currentTime + 0.05);
+                    
+                    oscillator.connect(gainNode);
+                    gainNode.connect(this.audioContext.destination);
+                    
+                    oscillator.start();
+                    oscillator.stop(this.audioContext.currentTime + 0.05);
+                };
+
+                // Create continuity beep sound
+                this.createBeepSound = () => {
+                    const oscillator = this.audioContext.createOscillator();
+                    const gainNode = this.audioContext.createGain();
+                    
+                    oscillator.type = 'sine';
+                    oscillator.frequency.setValueAtTime(880, this.audioContext.currentTime);
+                    
+                    gainNode.gain.setValueAtTime(0.3, this.audioContext.currentTime);
+                    gainNode.gain.exponentialRampToValueAtTime(0.01, this.audioContext.currentTime + 0.3);
+                    
+                    oscillator.connect(gainNode);
+                    gainNode.connect(this.audioContext.destination);
+                    
+                    oscillator.start();
+                    oscillator.stop(this.audioContext.currentTime + 0.3);
+                };
+            }
+
+            setupDial() {
+                const modes = ['OFF', 'ACA', 'DCA', 'ACV', 'DCV', 'Ω', '🔔', 'Hz', 'µF', '°C', '→|'];
+                const totalModes = modes.length;
+                const angleStep = 360 / totalModes;
+
+                modes.forEach((mode, i) => {
+                    const marker = document.createElement('div');
+                    marker.className = 'dial-marker';
+                    const angle = i * angleStep;
+                    marker.style.transform = `
+                        rotate(${angle}deg)
+                        translateY(-140px)
+                        rotate(-${angle}deg)
+                    `;
+                    marker.textContent = mode;
+                    this.dialRing.appendChild(marker);
+                });
+
+                // Track drag state and position
+                let isDragging = false;
+                let startAngle = 0;
+                let lastAngle = 0;
+
+                const getAngle = (event) => {
+                    const rect = this.dial.getBoundingClientRect();
+                    const centerX = rect.left + rect.width / 2;
+                    const centerY = rect.top + rect.height / 2;
+                    
+                    // Get coordinates for both mouse and touch events
+                    const clientX = event.touches ? event.touches[0].clientX : event.clientX;
+                    const clientY = event.touches ? event.touches[0].clientY : event.clientY;
+                    
+                    // Calculate angle
+                    const angle = Math.atan2(clientY - centerY, clientX - centerX) * 180 / Math.PI;
+                    return (angle + 450) % 360; // Normalize to 0-360, with 0 at the top
+                };
+
+                const startDrag = (event) => {
+                    isDragging = true;
+                    startAngle = getAngle(event) - this.currentRotation;
+                    lastAngle = this.currentRotation;
+                    event.preventDefault();
+                };
+
+                const onDrag = (event) => {
+                    if (!isDragging) return;
+                    
+                    let newRotation = getAngle(event) - startAngle;
+                    
+                    // Snap to nearest mode position
+                    const snappedRotation = Math.round(newRotation / angleStep) * angleStep;
+                    
+                    // Only update if we've moved to a new position
+                    if (snappedRotation !== this.currentRotation) {
+                        this.currentRotation = snappedRotation;
+                        this.dial.style.transform = `rotate(${this.currentRotation}deg)`;
+                        
+                        const modeIndex = Math.round(this.currentRotation / angleStep) % modes.length;
+                        this.setMode(modes[modeIndex]);
+                        
+                        // Play click sound
+                        this.createClickSound();
+                    }
+                    
+                    event.preventDefault();
+                };
+
+                const endDrag = () => {
+                    isDragging = false;
+                };
+
+                // Add mouse events
+                this.dial.addEventListener('mousedown', startDrag);
+                window.addEventListener('mousemove', onDrag);
+                window.addEventListener('mouseup', endDrag);
+
+                // Add touch events
+                this.dial.addEventListener('touchstart', startDrag);
+                window.addEventListener('touchmove', onDrag);
+                window.addEventListener('touchend', endDrag);
+
+                // Single click for step-wise rotation
+                this.dial.addEventListener('click', (event) => {
+                    if (event.detail === 1) { // Only handle single clicks
+                        this.currentRotation = (this.currentRotation + angleStep) % 360;
+                        this.dial.style.transform = `rotate(${this.currentRotation}deg)`;
+                        const modeIndex = Math.round(this.currentRotation / angleStep) % modes.length;
+                        this.setMode(modes[modeIndex]);
+                    }
+                });
+            }
+
+            setMode(mode) {
+                const previousMode = this.mode;
+                this.mode = mode;
+                
+                // Play beep sound if switching to continuity mode
+                if (mode === '🔔' && previousMode !== '🔔') {
+                    this.createBeepSound();
+                }
+                
+                // Update mode display with proper formatting
+                switch(mode) {
+                    case 'ACA':
+                        this.screenMode.textContent = 'A~';
+                        break;
+                    case 'DCA':
+                        this.screenMode.textContent = 'A—';
+                        break;
+                    case 'ACV':
+                        this.screenMode.textContent = 'V~';
+                        break;
+                    case 'DCV':
+                        this.screenMode.textContent = 'V—';
+                        break;
+                    case 'OFF':
+                        this.screenMode.textContent = '---';
+                        this.screenValue.textContent = '---';
+                        break;
+                    case 'Ω':
+                        this.screenMode.textContent = 'Ω';
+                        break;
+                    case '🔔':
+                        this.screenMode.textContent = 'CONT';
+                        break;
+                    default:
+                        this.screenMode.textContent = mode;
+                }
+                this.updateHelp();
+                this.updateDisplay();
+            }
+
+            setupControls() {
+                document.querySelector('#hold').addEventListener('click', (e) => {
+                    e.target.classList.toggle('active');
+                    this.screenHold.style.display = 
+                        e.target.classList.contains('active') ? 'block' : 'none';
+                });
+
+                document.querySelector('#rel').addEventListener('click', (e) => {
+                    e.target.classList.toggle('active');
+                });
+
+                document.querySelector('#select').addEventListener('click', (e) => {
+                    e.target.classList.toggle('active');
+                });
+            }
+
+            setupHelp() {
+                const helpContent = document.createElement('div');
+                helpContent.innerHTML = `
+                    <h3>Select a Measurement Mode</h3>
+                    <p>Click the dial to rotate through measurement modes</p>
+                `;
+                this.helpPanel.appendChild(helpContent);
+            }
+
+            updateHelp() {
+                let content = HELP_CONTENT[this.mode] || HELP_CONTENT.VOLTAGE;
+                this.helpPanel.innerHTML = `
+                    <h3>${content.title}</h3>
+                    <div class="steps">
+                        <h4>Steps:</h4>
+                        <ol>
+                            ${content.steps.map(step => `<li>${step}</li>`).join('')}
+                        </ol>
+                    </div>
+                    <div class="warning">
+                        <h4>⚠️ Warning:</h4>
+                        <p>${content.warning}</p>
+                    </div>
+                    <div class="uses">
+                        <h4>🔹 Common Uses:</h4>
+                        <ul>
+                            ${content.uses.map(use => `<li>${use}</li>`).join('')}
+                        </ul>
+                    </div>
+                `;
+            }
+
+            updateDisplay() {
+                if (this.mode === 'OFF') {
+                    this.screenValue.textContent = '---';
+                    return;
+                }
+
+                // Simulate readings based on mode
+                let reading;
+                switch(this.mode) {
+                    case 'ACA':
+                        reading = (Math.random() * 10 + 2).toFixed(1);
+                        break;
+                    case 'DCA':
+                        reading = (Math.random() * 5).toFixed(2);
+                        break;
+                    case 'ACV':
+                        reading = Math.floor(Math.random() * 20 + 110);
+                        break;
+                    case 'DCV':
+                        reading = (Math.random() * 12).toFixed(1);
+                        break;
+                    case 'Ω':
+                        reading = (Math.random() * 1000).toFixed(1);
+                        break;
+                    case '🔔':
+                        reading = Math.random() > 0.5 ? 'BEEP' : 'OPEN';
+                        break;
+                    default:
+                        reading = '0.00';
+                }
+
+                this.screenValue.textContent = reading;
+            }
+        }
+
+        // Initialize the multimeter
+        const meter = new Multimeter();
+
+        // Update display periodically
+        setInterval(() => meter.updateDisplay(), 1000);
+    </script>
+</body>
+</html>
