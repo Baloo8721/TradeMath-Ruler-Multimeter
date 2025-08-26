@@ -360,8 +360,13 @@
             font-size: 2.5em;
             font-weight: bold;
             margin: 20px 0 10px;
-            color: #00ffff;
+            min-height: 1.5em; /* Prevent layout shift */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #00ffff !important;
             text-shadow: 0 0 10px rgba(0, 255, 255, 0.5);
+            transition: all 0.3s ease;
         }
 
         .reading-display .controls {
@@ -410,15 +415,18 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            margin: 16px 0 8px 0;
-            min-height: 48px;
-            gap: 44px;
+            gap: 10px;
+            margin: 20px auto;
+            max-width: 100%;
+            padding: 0 15px;
+            box-sizing: border-box;
         }
-        .quiz-progress-left,
-        .quiz-progress-right {
+        .quiz-progress-left, .quiz-progress-right {
             display: flex;
-            gap: 6px;
-            min-width: 120px;
+            gap: 5px;
+            flex-wrap: wrap;
+            justify-content: center;
+            max-width: 100%;
         }
         .quiz-progress-box {
             width: 32px;
@@ -609,6 +617,139 @@
             transform: translateY(-2px);
         }
 
+        /* Custom Number Picker */
+        .number-picker-overlay {
+            display: none;
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: #2a2a2a;
+            border-top: 2px solid #00ffff;
+            padding: 15px;
+            z-index: 1000;
+            box-shadow: 0 -5px 15px rgba(0,0,0,0.3);
+        }
+
+        .number-picker-container {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 10px;
+            max-width: 100%;
+            overflow-x: auto;
+            padding-bottom: 5px;
+        }
+
+        .number-scroll {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            max-height: 200px;
+            overflow-y: auto;
+            scroll-snap-type: y mandatory;
+            scroll-behavior: smooth;
+            background: #1a1a1a;
+            border-radius: 8px;
+            padding: 10px 0;
+            min-width: 60px;
+        }
+
+        .number-scroll::-webkit-scrollbar {
+            width: 0;
+            background: transparent;
+        }
+
+        .number-option {
+            padding: 8px 15px;
+            font-size: 1.2em;
+            color: #fff;
+            scroll-snap-align: center;
+            cursor: pointer;
+            text-align: center;
+            min-width: 30px;
+        }
+
+        .number-option:hover, .number-option.selected {
+            color: #00ffff;
+            font-weight: bold;
+        }
+
+        .fraction-scroll {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            max-height: 200px;
+            overflow-y: auto;
+            scroll-snap-type: y mandatory;
+            scroll-behavior: smooth;
+            background: #1a1a1a;
+            border-radius: 8px;
+            padding: 10px 0;
+            flex-grow: 1;
+        }
+
+        .fraction-option {
+            padding: 8px 15px;
+            font-size: 1.2em;
+            color: #fff;
+            scroll-snap-align: center;
+            cursor: pointer;
+            text-align: center;
+            min-width: 60px;
+        }
+
+        .fraction-option:hover, .fraction-option.selected {
+            color: #00ffff;
+            font-weight: bold;
+        }
+
+        .picker-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .picker-btn {
+            padding: 8px 20px;
+            border: none;
+            border-radius: 4px;
+            background: #00ffff;
+            color: #000;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .picker-btn.cancel {
+            background: #ff4444;
+            color: white;
+        }
+
+        /* Hide the default input on mobile */
+        @media (max-width: 768px) {
+            .quiz-input {
+                display: none;
+            }
+            
+            .quiz-input-wrapper {
+                position: relative;
+                width: 100%;
+            }
+            
+            .quiz-input-trigger {
+                width: 100%;
+                padding: 12px;
+                font-size: 1.2em;
+                text-align: center;
+                background: #2a2a2a;
+                border: 2px solid #444;
+                border-radius: 6px;
+                color: white;
+                cursor: pointer;
+            }
+        }
+
         /* Mobile-first responsive design */
     </style>
 </head>
@@ -619,22 +760,38 @@
             <p>Master the art of precise measurement</p>
         </div>
 
-        <div class="lesson-info">
-            <h2 id="lesson-title"></h2>
-        </div>
-
-        <div class="lesson-selector" style="flex-direction: column; align-items: center; gap: 0;">
-            <div style="display: flex; justify-content: center; gap: 28px;">
-                <button class="lesson-btn active" onclick="setLesson('basic')">Basic</button>
-                <button class="lesson-btn" onclick="setLesson('fractions')">Fractions</button>
-                <button class="lesson-btn" onclick="setLesson('precision')">Precision</button>
-            </div>
-            <div style="display: flex; justify-content: center; margin-top: 18px;">
-                <button class="lesson-btn quiz-btn" onclick="setLesson('quiz')">Quiz</button>
+        <div class="lesson-selector">
+            <div class="lesson-buttons-container">
+                <div class="lesson-buttons">
+                    <button class="lesson-btn" onclick="setLesson('basic')">Basic</button>
+                    <button class="lesson-btn" onclick="setLesson('precision')">Fractions</button>
+                </div>
+                <button class="lesson-btn quiz-btn" onclick="toggleQuizMode()">Quiz Mode</button>
             </div>
         </div>
+        <style>
+            .lesson-selector {
+                display: flex;
+                justify-content: center;
+                margin: 10px 0;
+            }
+            .lesson-buttons-container {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                gap: 10px;
+            }
+            .lesson-buttons {
+                display: flex;
+                gap: 28px;
+            }
+            .quiz-btn {
+                margin-top: 8px;
+            }
+        </style>
 
         <div class="measuring-area">
+            <div id="lesson-indicator" style="position: absolute; top: 10px; left: 15px; color: #00ffff; font-size: 0.9em; font-weight: bold; text-transform: uppercase; z-index: 10;"></div>
             <div class="color-buttons circle-mode">
                 <button class="color-btn dark active color-circle" title="Dark" onclick="changeColor('#1a1a1a', '#fff')"></button>
                 <button class="color-btn yellow color-circle" title="Yellow" onclick="changeColor('#ffdd00', '#000')"></button>
@@ -651,9 +808,55 @@
                 <div class="reading-value" id="reading-value"></div>
                 <div class="quiz-question" id="quiz-question" style="display: none;">What is the measurement shown?</div>
                 <div class="controls" style="display: flex; flex-direction: column; align-items: center; gap: 12px; margin-top: 15px;">
-                    <div class="quiz-controls" id="quiz-controls" style="display: none; flex-direction: row; gap: 10px; width: 100%; justify-content: center; margin-bottom: 28px;">
-                        <input type="text" class="quiz-input" id="quiz-input" placeholder="Enter measurement">
+                    <div class="quiz-controls" id="quiz-controls" style="display: none;">
+                        <div class="quiz-input-wrapper">
+                            <input type="text" class="quiz-input" id="quiz-input" placeholder="Enter measurement">
+                            <div class="quiz-input-trigger" id="quiz-input-trigger" style="display: none;">Enter</div>
+                        </div>
                         <button class="btn" onclick="checkAnswer()">Check</button>
+                    </div>
+                    
+                    <!-- Custom Number Picker Overlay -->
+                    <div class="number-picker-overlay" id="number-picker">
+                        <div class="number-picker-container">
+                            <div class="number-scroll" id="inches-scroll">
+                                <div class="number-option">0</div>
+                                <div class="number-option">1</div>
+                                <div class="number-option">2</div>
+                                <div class="number-option">3</div>
+                                <div class="number-option">4</div>
+                                <div class="number-option">5</div>
+                                <div class="number-option">6</div>
+                                <div class="number-option">7</div>
+                                <div class="number-option">8</div>
+                                <div class="number-option">9</div>
+                                <div class="number-option">10</div>
+                                <div class="number-option">11</div>
+                                <div class="number-option">12</div>
+                            </div>
+                            <div class="fraction-scroll" id="fractions-scroll">
+                                <div class="fraction-option">0</div>
+                                <div class="fraction-option">1/16</div>
+                                <div class="fraction-option">1/8</div>
+                                <div class="fraction-option">3/16</div>
+                                <div class="fraction-option">1/4</div>
+                                <div class="fraction-option">5/16</div>
+                                <div class="fraction-option">3/8</div>
+                                <div class="fraction-option">7/16</div>
+                                <div class="fraction-option">1/2</div>
+                                <div class="fraction-option">9/16</div>
+                                <div class="fraction-option">5/8</div>
+                                <div class="fraction-option">11/16</div>
+                                <div class="fraction-option">3/4</div>
+                                <div class="fraction-option">13/16</div>
+                                <div class="fraction-option">7/8</div>
+                                <div class="fraction-option">15/16</div>
+                            </div>
+                        </div>
+                        <div class="picker-actions">
+                            <button class="picker-btn cancel" id="cancel-picker">Cancel</button>
+                            <button class="picker-btn" id="apply-picker">Apply</button>
+                        </div>
                     </div>
                     <div class="quiz-progress-row" id="quiz-progress-row" style="display:none;">
                         <div class="quiz-progress-left" id="quiz-progress-left"></div>
@@ -661,7 +864,6 @@
                     </div>
                     <div class="score" id="score" style="display:none;">Score: 0/10</div>
                     <button class="btn" onclick="generateRandomMeasurement()" style="margin-bottom: 10px;">New Measurement</button>
-                    <button class="btn show-answer-btn" onclick="showAnswer()" style="display: none;">Show Answer</button>
                 </div>
             </div>
         </div>
@@ -700,8 +902,8 @@ let quizActive = false;
                     "Practice with simple measurements first"
                 ]
             },
-            fractions: {
-                title: "Reading Fractions",
+            precision: {
+                title: "Fractions / Precision",
                 description: "Master reading eighth and sixteenth inch measurements.",
                 tips: [
                     "Eighth-inch marks divide quarters into two parts",
@@ -709,17 +911,6 @@ let quizActive = false;
                     "Always reduce fractions to lowest terms (2/4 = 1/2)",
                     "Practice identifying common fractions quickly",
                     "Use the 'count up' method for complex fractions"
-                ]
-            },
-            precision: {
-                title: "Precision Measuring",
-                description: "Learn to read measurements to the nearest sixteenth of an inch.",
-                tips: [
-                    "Always read to the nearest smallest mark",
-                    "If between two marks, round to the nearest",
-                    "Check your reading twice for accuracy",
-                    "Practice estimating between marks",
-                    "Remember: precision improves with practice"
                 ]
             },
             quiz: {
@@ -879,8 +1070,83 @@ let quizActive = false;
             });
         }
 
+        function updateLessonIndicator(lesson) {
+            const indicator = document.getElementById('lesson-indicator');
+            if (quizMode) {
+                indicator.textContent = 'Quiz Mode';
+            } else {
+                const lessonNames = {
+                    'basic': 'Basic',
+                    'precision': 'Fractions',
+                    'quiz': 'Quiz Mode'
+                };
+                indicator.textContent = lessonNames[lesson] || '';
+            }
+        }
+
+        function toggleQuizMode() {
+            quizMode = !quizMode;
+            const quizBtn = document.querySelector('.quiz-btn');
+            
+            if (quizMode) {
+                // Entering quiz mode
+                quizBtn.classList.add('active');
+                document.getElementById('quiz-input-trigger').style.display = 'flex';
+                document.getElementById('quiz-controls').style.display = 'flex';
+                document.getElementById('quiz-question').style.display = 'block';
+                document.getElementById('quiz-progress-row').style.display = 'flex';
+                document.getElementById('score').style.display = 'block';
+                
+                // Initialize quiz state
+                quizActive = true;
+                quizAnswers = [];
+                score = { correct: 0, total: 0 };
+                updateScore();
+                updateQuizProgress();
+                
+                // Start with a new measurement
+                generateRandomMeasurement();
+            } else {
+                // Exiting quiz mode
+                quizBtn.classList.remove('active');
+                document.getElementById('quiz-input-trigger').style.display = 'none';
+                document.getElementById('quiz-controls').style.display = 'none';
+                document.getElementById('quiz-question').style.display = 'none';
+                document.getElementById('quiz-progress-row').style.display = 'none';
+                document.getElementById('score').style.display = 'none';
+                
+                // Reset quiz state
+                quizActive = false;
+                
+                // Show normal measurement
+                generateRandomMeasurement(false);
+            }
+            
+            // Update the lesson indicator
+            updateLessonIndicator(currentLesson);
+        }
+        
         function setLesson(lesson) {
-    if (lesson === 'quiz') {
+            currentLesson = lesson === 'fractions' ? 'precision' : lesson; // Map 'fractions' to 'precision' for backward compatibility
+            updateLessonIndicator(lesson);
+            
+            // Show/hide quiz elements based on quiz mode
+            const quizElements = [
+                'quiz-input-trigger',
+                'quiz-controls',
+                'quiz-question',
+                'quiz-progress-row',
+                'score'
+            ];
+            
+            quizElements.forEach(id => {
+                const element = document.getElementById(id);
+                if (element) {
+                    element.style.display = lesson === 'quiz' ? '' : 'none';
+                }
+            });
+            
+            if (lesson === 'quiz') {
         quizAnswers = [];
         quizActive = true;
         updateQuizProgress();
@@ -899,34 +1165,14 @@ let quizActive = false;
         document.getElementById('quiz-controls').style.display = 'none';
         document.getElementById('quiz-question').style.display = 'none';
     }
-            currentLesson = lesson;
-            const wasQuizMode = quizMode;
-            quizMode = lesson === 'quiz';
-            // Toggle stacking of quiz buttons
-            const controlsDiv = document.querySelector('.reading-display .controls');
-            if (quizMode) {
-                controlsDiv.classList.add('quiz-mode');
-            } else {
-                controlsDiv.classList.remove('quiz-mode');
-            }
-            
-            // Update UI
-            document.querySelectorAll('.lesson-btn').forEach(btn => btn.classList.remove('active'));
+            document.querySelectorAll('.lesson-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
             event.target.classList.add('active');
             
-            document.getElementById('lesson-title').textContent = lessons[lesson].title;
-            
-            // Show/hide quiz section
-            const showAnswerBtn = document.querySelector('.show-answer-btn');
+            // Reset quiz mode when changing lessons
             if (quizMode) {
-                // Entering quiz mode
-                document.getElementById('quiz-question').style.display = 'block';
-                document.querySelector('.quiz-controls').style.display = 'block';
-                if (showAnswerBtn) showAnswerBtn.style.display = 'block';
-                
-                // Reset score and generate first question
-                score = { correct: 0, total: 0 };
-                updateScore();
+                toggleQuizMode();
             }
             
             // Always generate a new measurement when switching modes
@@ -934,41 +1180,53 @@ let quizActive = false;
                 // Exiting quiz mode
                 document.getElementById('quiz-question').style.display = 'none';
                 document.querySelector('.quiz-controls').style.display = 'none';
-                if (showAnswerBtn) showAnswerBtn.style.display = 'none';
             }
             
             // Generate new measurement for any mode change
             generateRandomMeasurement();
         }
 
-        function generateRandomMeasurement() {
+        function generateRandomMeasurement(showQuestionMark = true) {
             let measurement;
+            let fraction;
             
-            switch (currentLesson) {
-                case 'basic':
-                    // Whole inches and halves
-                    measurement = Math.floor(Math.random() * 12) + (Math.random() > 0.5 ? 0.5 : 0);
-                    break;
-                case 'fractions':
-                    // Include quarters and eighths
-                    measurement = Math.floor(Math.random() * 12) + (Math.floor(Math.random() * 8) / 8);
-                    break;
-                case 'precision':
-                case 'quiz':
-                    // Include sixteenths
-                    measurement = Math.floor(Math.random() * 12) + (Math.floor(Math.random() * 16) / 16);
-                    break;
+            // For quiz mode, always include a fraction
+            if (quizMode) {
+                const whole = Math.floor(Math.random() * 12);
+                const fractions = [1/16, 1/8, 3/16, 1/4, 5/16, 3/8, 7/16, 1/2, 9/16, 5/8, 11/16, 3/4, 13/16, 7/8, 15/16];
+                fraction = fractions[Math.floor(Math.random() * fractions.length)];
+                measurement = whole + fraction;
+            } else {
+                switch (currentLesson) {
+                    case 'basic':
+                        measurement = Math.floor(Math.random() * 12) + (Math.random() > 0.5 ? 0.5 : 0);
+                        break;
+                    case 'fractions':
+                        measurement = Math.floor(Math.random() * 12) + (Math.floor(Math.random() * 8) / 8);
+                        break;
+                    case 'precision':
+                        measurement = Math.floor(Math.random() * 12) + (Math.floor(Math.random() * 16) / 16);
+                        break;
+                }
             }
             
             currentMeasurement = measurement;
             movePointer(measurement);
             
+            const readingValue = document.getElementById('reading-value');
             if (quizMode) {
-                document.getElementById('reading-value').textContent = "???";
+                if (showQuestionMark) {
+                    readingValue.innerHTML = '<span style="font-size: 1em; color: #00ffff;">???</span>';
+                    readingValue.style.color = '#00ffff'; // Cyan for question marks
+                } else {
+                    readingValue.textContent = formatMeasurement(measurement);
+                    readingValue.style.color = ''; // Reset to default color
+                }
                 document.getElementById('quiz-input').value = "";
                 document.getElementById('quiz-input').focus();
             } else {
-                document.getElementById('reading-value').textContent = formatMeasurement(measurement);
+                readingValue.textContent = formatMeasurement(measurement);
+                readingValue.style.color = ''; // Reset to default color
             }
         }
 
@@ -999,9 +1257,6 @@ let quizActive = false;
             }
         }
 
-        function showAnswer() {
-            document.getElementById('reading-value').textContent = formatMeasurement(currentMeasurement);
-        }
 
         function resetTape() {
             currentMeasurement = 0;
@@ -1011,51 +1266,72 @@ let quizActive = false;
         }
 
         function checkAnswer() {
-    if (quizMode && quizActive && quizAnswers.length >= 10) return;
-
-            let userInput = document.getElementById('quiz-input').value.trim();
+            // Don't proceed if quiz is complete
+            if (quizMode && quizActive && quizAnswers.length >= 10) return;
+            
+            // Get and clean user input
+            const quizInput = document.getElementById('quiz-input');
+            let userInput = quizInput.value.trim();
             let correctAnswer = formatMeasurement(currentMeasurement);
 
-            // Remove trailing quote mark if present
+            // Remove trailing quote if present
             if (userInput.endsWith('"')) userInput = userInput.slice(0, -1).trim();
             if (correctAnswer.endsWith('"')) correctAnswer = correctAnswer.slice(0, -1).trim();
 
+            // Check if answer is correct
+            const isCorrect = userInput === correctAnswer;
+            
+            // Update score
             score.total++;
-    let correct = false;
-    if (userInput === correctAnswer) {
-        score.correct++;
-        correct = true;
-    }
+            if (isCorrect) score.correct++;
+            updateScore();
 
-    // Track answers for progress
-        if (quizMode && quizActive) {
-            quizAnswers.push(correct);
-            updateQuizProgress();
-            // Always show progress/score in quiz mode
-            document.getElementById('quiz-progress-row').style.display = '';
-            document.getElementById('score').style.display = '';
-            if (quizAnswers.length === 10) {
-                quizActive = false;
-                showQuizOverlay();
-                return;
+            // Update quiz progress if in quiz mode
+            if (quizMode && quizActive) {
+                quizAnswers.push(isCorrect);
+                updateQuizProgress();
+                document.getElementById('quiz-progress-row').style.display = '';
+                document.getElementById('score').style.display = '';
+                
+                if (quizAnswers.length >= 10) {
+                    quizActive = false;
+                    showQuizOverlay();
+                    return;
+                }
             }
-        }
-    updateScore();
-    const readingValue = document.getElementById('reading-value');
-    readingValue.textContent = correct ? 'Correct! ✓' : 'Nope! ✗';
-    readingValue.style.color = correct ? '#00ff00' : '#ff3333';
-    readingValue.style.fontWeight = 'bold';
-    readingValue.style.fontSize = '1.5em';
-    readingValue.style.transition = 'all 0.3s';
 
-    // Auto-generate new measurement after 1 second
-    setTimeout(() => {
-        readingValue.style.color = '';
-        readingValue.style.fontWeight = '';
-        readingValue.style.fontSize = '';
-        generateRandomMeasurement();
-    }, 1000);
-}
+            // Show feedback with consistent sizing and colors
+            const readingValue = document.getElementById('reading-value');
+            if (isCorrect) {
+                readingValue.innerHTML = '<span style="font-size: 1em; color: #00ff00;">Correct! ✓</span>';
+                readingValue.style.color = '#00ff00'; // Bright green
+            } else {
+                readingValue.innerHTML = `<span style="font-size: 0.8em; color: #ff3333;">Nope! The answer is ${correctAnswer}"</span>`;
+                readingValue.style.color = '#ff3333'; // Bright red
+            }
+            readingValue.style.fontWeight = 'bold';
+
+            // Clear any existing timeouts
+            if (window.answerTimeout) clearTimeout(window.answerTimeout);
+            
+            // Set up next question
+            window.answerTimeout = setTimeout(() => {
+                // Reset input, trigger text and focus
+                quizInput.value = '';
+                const quizInputTrigger = document.getElementById('quiz-input-trigger');
+                if (quizInputTrigger) {
+                    quizInputTrigger.textContent = 'Enter';
+                }
+                
+                // Generate new question
+                generateRandomMeasurement();
+                
+                // Reset reading value style
+                readingValue.style.color = '';
+                readingValue.style.fontWeight = '';
+                readingValue.style.fontSize = '';
+            }, 2000); // Increased from 1500ms to 2000ms (2 seconds)
+        }
 
 function updateQuizProgress() {
     const left = document.getElementById('quiz-progress-left');
@@ -1174,7 +1450,324 @@ function confettiAnimation() {
         document.addEventListener('DOMContentLoaded', () => {
             initializeTape();
             initializeMobileScroll();
+            updateLessonIndicator('basic');
             generateRandomMeasurement();
+            
+            // Initialize number picker
+            const numberPicker = document.getElementById('number-picker');
+            const quizInput = document.getElementById('quiz-input');
+            const quizInputTrigger = document.getElementById('quiz-input-trigger');
+            const cancelPicker = document.getElementById('cancel-picker');
+            const applyPicker = document.getElementById('apply-picker');
+            const inchesScroll = document.getElementById('inches-scroll');
+            const fractionsScroll = document.getElementById('fractions-scroll');
+            
+            let selectedInches = '0';
+            let selectedFraction = '0';
+            
+            // Show picker when clicking the input or trigger
+            quizInput.addEventListener('focus', showNumberPicker);
+            quizInputTrigger.addEventListener('click', showNumberPicker);
+            
+            // Hide picker when clicking cancel
+            cancelPicker.addEventListener('click', hideNumberPicker);
+            
+            // Apply selection when clicking apply
+            applyPicker.addEventListener('click', applyNumberSelection);
+            
+            // Initialize default selections
+            function initSelections() {
+                if (!selectedInches) {
+                    selectedInches = '0';
+                    selectOption(inchesScroll.firstElementChild, inchesScroll, 'number-option');
+                }
+                if (!selectedFraction) {
+                    selectedFraction = '0';
+                    selectOption(fractionsScroll.firstElementChild, fractionsScroll, 'fraction-option');
+                }
+                // Scroll to selected options
+                scrollToSelected();
+            }
+            
+            // Initialize selections on page load
+            initSelections();
+            
+            function showNumberPicker() {
+                numberPicker.style.display = 'block';
+                
+                // Reset the input field and trigger
+                quizInput.value = '';
+                quizInputTrigger.textContent = '0';
+                
+                // Reset selections to 0
+                selectedInches = '0';
+                selectedFraction = '0';
+                
+                // Clear all selections first
+                document.querySelectorAll('.number-option, .fraction-option').forEach(el => {
+                    el.classList.remove('selected');
+                });
+                
+                // Select 0 in inches
+                const zeroInch = Array.from(inchesScroll.children).find(opt => opt.textContent === '0');
+                if (zeroInch) {
+                    zeroInch.classList.add('selected');
+                    selectedInches = '0';
+                }
+                
+                // Select 0 in fractions
+                const zeroFrac = Array.from(fractionsScroll.children).find(opt => opt.textContent === '0');
+                if (zeroFrac) {
+                    zeroFrac.classList.add('selected');
+                    selectedFraction = '0';
+                }
+                
+                // Force update the display
+                const displayText = formatSelectedMeasurement();
+                quizInputTrigger.textContent = displayText || '0';
+                quizInput.value = displayText || '0';
+                
+                // Scroll to 0 positions with a small delay to ensure DOM is updated
+                setTimeout(() => {
+                    inchesScroll.scrollTo({ top: 0, behavior: 'instant' });
+                    fractionsScroll.scrollTo({ top: 0, behavior: 'instant' });
+                }, 10);
+            }
+            
+            function hideNumberPicker() {
+                numberPicker.style.display = 'none';
+            }
+            
+            function formatSelectedMeasurement() {
+                if (selectedFraction === '0') {
+                    return selectedInches;
+                } else if (selectedInches === '0') {
+                    return selectedFraction;
+                } else {
+                    return `${selectedInches} ${selectedFraction}`;
+                }
+            }
+            
+            function applyNumberSelection() {
+                // Get the current combined measurement
+                updateCombinedMeasurement();
+                hideNumberPicker();
+                
+                // Trigger the check answer function in quiz mode
+                if (quizMode && quizInput.value) {
+                    checkAnswer();
+                }
+            }
+            
+            function selectOption(option, container, optionClass) {
+                // Remove selected class from all options
+                container.querySelectorAll(`.${optionClass}`).forEach(opt => {
+                    opt.classList.remove('selected');
+                });
+                
+                // Add selected class to clicked option
+                option.classList.add('selected');
+                
+                // Smooth scroll to center the selected option
+                const containerRect = container.getBoundingClientRect();
+                const optionRect = option.getBoundingClientRect();
+                const containerCenter = containerRect.top + containerRect.height / 2;
+                const optionCenter = optionRect.top + optionRect.height / 2;
+                const scrollAmount = optionCenter - containerCenter + container.scrollTop;
+                
+                container.scrollTo({
+                    top: scrollAmount,
+                    behavior: 'smooth'
+                });
+            }
+            
+            function scrollToSelected() {
+                // Find and scroll to selected inches
+                const selectedInch = inchesScroll.querySelector('.selected') || inchesScroll.firstElementChild;
+                if (selectedInch) {
+                    selectedInch.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }
+                
+                // Find and scroll to selected fraction
+                const selectedFrac = fractionsScroll.querySelector('.selected') || fractionsScroll.firstElementChild;
+                if (selectedFrac) {
+                    selectedFrac.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }
+            }
+            
+            // Handle inch selection
+            Array.from(inchesScroll.children).forEach(option => {
+                option.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    selectOption(option, inchesScroll, 'number-option');
+                    selectedInches = option.textContent;
+                    // Update the display to show combined measurement
+                    updateCombinedMeasurement();
+                });
+            });
+
+            // Handle fraction selection
+            Array.from(fractionsScroll.children).forEach(option => {
+                option.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    selectOption(option, fractionsScroll, 'fraction-option');
+                    selectedFraction = option.textContent;
+                    // Update the display to show combined measurement
+                    updateCombinedMeasurement();
+                });
+            });
+            
+            // Update the display with combined measurement
+            function updateCombinedMeasurement() {
+                let displayText = '';
+                
+                // Only show inches if it's not zero or if fraction is also zero
+                if (selectedInches !== '0' || selectedFraction === '0') {
+                    displayText += selectedInches;
+                }
+                
+                // Add space between inches and fraction if both are non-zero
+                if (selectedInches !== '0' && selectedFraction !== '0') {
+                    displayText += ' ';
+                }
+                
+                // Only show fraction if it's not zero or if inches is also zero
+                if (selectedFraction !== '0' || selectedInches === '0') {
+                    displayText += selectedFraction;
+                }
+                
+                // Update the display
+                quizInputTrigger.textContent = displayText || '0';
+                
+                // Update the hidden input field for form submission
+                quizInput.value = displayText || '0';
+            }
+
+            // Handle scroll events to snap to nearest option
+            [inchesScroll, fractionsScroll].forEach(scroll => {
+                let isScrolling;
+                let scrollTimeout;
+                
+                const handleScroll = () => {
+                    // Clear any pending scroll end
+                    clearTimeout(scrollTimeout);
+                    
+                    // Set a timeout to detect when scrolling has stopped
+                    scrollTimeout = setTimeout(() => {
+                        const options = scroll.children;
+                        let closestOption = null;
+                        let minDistance = Infinity;
+                        
+                        for (let i = 0; i < options.length; i++) {
+                            const option = options[i];
+                            const rect = option.getBoundingClientRect();
+                            const scrollRect = scroll.getBoundingClientRect();
+                            const optionMiddle = rect.top + rect.height / 2;
+                            const scrollMiddle = scrollRect.top + scrollRect.height / 2;
+                            const distance = Math.abs(optionMiddle - scrollMiddle);
+                            
+                            if (distance < minDistance) {
+                                minDistance = distance;
+                                closestOption = option;
+                            }
+                        }
+                        
+                        if (closestOption) {
+                            const optionClass = scroll === inchesScroll ? 'number-option' : 'fraction-option';
+                            selectOption(closestOption, scroll, optionClass);
+                            
+                            // Smooth scroll to center the selected option
+                            const optionRect = closestOption.getBoundingClientRect();
+                            const scrollRect = scroll.getBoundingClientRect();
+                            const scrollTo = closestOption.offsetTop - (scrollRect.height / 2) + (optionRect.height / 2);
+                            
+                            scroll.scrollTo({
+                                top: scrollTo,
+                                behavior: 'smooth'
+                            });
+                            
+                            // Update the selected value
+                            if (scroll === inchesScroll) {
+                                selectedInches = closestOption.textContent;
+                            } else {
+                                selectedFraction = closestOption.textContent;
+                            }
+                            
+                            // Update the display
+                            updateCombinedMeasurement();
+                        }
+                    }, 100); // Wait 100ms after scrolling stops to snap
+                };
+                
+                // Track if we're currently handling a click
+                let isHandlingClick = false;
+                
+                // Handle click events for direct selection
+                scroll.addEventListener('mousedown', (e) => {
+                    isHandlingClick = true;
+                    
+                    // Find which option was clicked
+                    const options = scroll.children;
+                    for (let i = 0; i < options.length; i++) {
+                        const option = options[i];
+                        const rect = option.getBoundingClientRect();
+                        
+                        // Check if click is within this option
+                        if (e.clientY >= rect.top && e.clientY <= rect.bottom) {
+                            const isInches = scroll === inchesScroll;
+                            const optionClass = isInches ? 'number-option' : 'fraction-option';
+                            
+                            // Clear all selections in this scroll container first
+                            const allOptions = scroll.querySelectorAll('.' + optionClass);
+                            allOptions.forEach(opt => opt.classList.remove('selected'));
+                            
+                            // Update the selected value and UI
+                            const selectedValue = option.textContent.trim();
+                            if (isInches) {
+                                selectedInches = selectedValue;
+                            } else {
+                                selectedFraction = selectedValue;
+                            }
+                            
+                            // Update the UI
+                            option.classList.add('selected');
+                            
+                            // Update the display immediately
+                            const displayText = formatSelectedMeasurement();
+                            quizInputTrigger.textContent = displayText;
+                            quizInput.value = displayText;
+                            
+                            // Prevent any default behavior that might interfere
+                            e.preventDefault();
+                            e.stopPropagation();
+                            return false;
+                        }
+                    }
+                }, true);
+                
+                // Prevent any auto-scroll selection
+                scroll.addEventListener('scroll', (e) => {
+                    if (!isHandlingClick) {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        return false;
+                    }
+                }, true);
+                
+                // Reset click handling after mouseup
+                document.addEventListener('mouseup', () => {
+                    isHandlingClick = false;
+                }, true);
+                
+                // Only handle scroll events for visual feedback, don't update selection
+                scroll.addEventListener('scroll', () => {
+                    isUserScrolling = true;
+                    clearTimeout(scrollTimeout);
+                    scrollTimeout = setTimeout(() => {
+                        isUserScrolling = false;
+                    }, 100);
+                });
+            });
         });
     </script>
 </body>
