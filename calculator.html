@@ -21,20 +21,21 @@
 
         .container {
             max-width: 500px;
-            margin: 0 auto;
+            margin: 10px auto;
             background: rgba(255, 255, 255, 0.95);
             border-radius: 20px;
-            padding: 25px;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            padding: 15px 20px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
             backdrop-filter: blur(10px);
         }
 
         h1 {
             text-align: center;
             color: #2c3e50;
-            margin-bottom: 30px;
-            font-size: 1.8rem;
+            margin: 0 0 15px 0;
+            font-size: 1.6rem;
             font-weight: 700;
+            line-height: 1.2;
         }
 
         .law-selector {
@@ -65,15 +66,16 @@
         .triangle-container {
             display: flex;
             justify-content: center;
-            margin-bottom: 30px;
+            margin: 0;
             position: relative;
+            padding: 0;
         }
 
         .triangle {
-            width: 200px;
-            height: 200px;
+            width: 180px;
+            height: 180px;
             position: relative;
-            margin: 20px;
+            margin: 10px;
         }
 
         .triangle svg {
@@ -103,8 +105,8 @@
         .calculator-section {
             background: #f8f9fa;
             border-radius: 15px;
-            padding: 20px;
-            margin-bottom: 20px;
+            padding: 0 20px 20px;
+            margin: -15px 0 0 0;
         }
 
         .input-group {
@@ -120,11 +122,14 @@
 
         input {
             width: 100%;
-            padding: 12px;
+            max-width: 200px;
+            padding: 10px 12px;
             border: 2px solid #ddd;
             border-radius: 8px;
             font-size: 16px;
             transition: border-color 0.3s ease;
+            margin: 0 auto;
+            display: block;
         }
 
         input:focus {
@@ -147,9 +152,9 @@
             margin-bottom: 20px;
         }
 
-        .calculate-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 20px rgba(52, 152, 219, 0.3);
+        .calculate-btn:active {
+            transform: translateY(2px);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
         }
 
         .result {
@@ -162,15 +167,25 @@
             color: #27ae60;
         }
 
+        .text-center {
+            text-align: center;
+            width: 100%;
+        }
+
         .formula {
             background: #fff3cd;
             border-left: 4px solid #ffc107;
-            padding: 15px;
+            padding: 8px 12px;
             border-radius: 8px;
-            margin-bottom: 20px;
+            margin: 5px auto 15px auto;
             font-family: monospace;
             font-size: 14px;
             color: #856404;
+            line-height: 1.4;
+            display: inline-block;
+            text-align: center;
+            width: auto;
+            max-width: 100%;
         }
 
         .explanation {
@@ -188,10 +203,179 @@
             display: none;
         }
 
-        .grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
+        .triangle-inputs {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
             gap: 15px;
+            margin: 20px 0;
+        }
+        
+        .input-row {
+            display: flex;
+            justify-content: center;
+            width: 100%;
+        }
+        
+        .input-row.top {
+            margin-bottom: 10px;
+        }
+        
+        .input-row.bottom {
+            gap: 30px;
+        }
+        
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            min-width: 120px;
+            max-width: 160px;
+        }
+        
+        .input-group label {
+            font-size: 0.9em;
+            margin-bottom: 5px;
+            white-space: nowrap;
+        }
+        
+        .input-group input {
+            width: 100%;
+            text-align: center;
+            padding: 8px 10px;
+        }
+
+        .number-picker-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.7);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            padding: 20px;
+        }
+
+        .number-picker-container {
+            background: #2c3e50; /* Darker blue from the triangle */
+            border: 2px solid #3498db; /* Lighter blue from the triangle */
+            border-radius: 8px;
+            padding: 15px;
+            width: 100%;
+            max-width: 400px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            position: relative;
+        }
+        
+        .picker-content {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin: 30px 0 15px;
+        }
+
+        .number-scroll, .fraction-scroll {
+            max-height: 200px;
+            overflow-y: auto;
+            scrollbar-width: none; /* Firefox */
+            -ms-overflow-style: none; /* IE and Edge */
+            flex: 1;
+            min-width: 80px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .number-scroll {
+            border-right: 2px solid rgba(255, 255, 255, 0.1);
+            padding-right: 15px;
+            margin-right: 5px;
+        }
+
+        .number-scroll::-webkit-scrollbar, 
+        .fraction-scroll::-webkit-scrollbar {
+            display: none; /* Chrome, Safari, Opera */
+        }
+
+        .number-option, .fraction-option {
+            padding: 12px 20px;
+            text-align: center;
+            color: #ecf0f1; /* Light text color */
+            cursor: pointer;
+            transition: all 0.2s;
+            border-radius: 4px;
+            margin: 2px 0;
+            width: 100%;
+            text-align: center;
+            box-sizing: border-box;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .number-option:hover, .fraction-option:hover {
+            background: rgba(52, 152, 219, 0.3); /* Lighter blue on hover */
+            transform: translateY(-1px);
+        }
+
+        .number-option.selected, .fraction-option.selected {
+            background: #3498db; /* Same as the triangle color */
+            color: white;
+            font-weight: bold;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+        
+        .close-picker {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: rgba(231, 76, 60, 0.8); /* Red from the watt's triangle */
+            border: none;
+            color: white;
+            font-size: 20px;
+            line-height: 1;
+            cursor: pointer;
+            width: 28px;
+            height: 28px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            transition: all 0.2s;
+        }
+        
+        .close-picker:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+        
+        .enter-btn {
+            width: 100%;
+            padding: 12px;
+            background: #2ecc71; /* Green for confirmation */
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 15px;
+            transition: all 0.2s;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-size: 14px;
+        }
+        
+        .enter-btn:hover {
+            background: #27ae60; /* Darker green on hover */
+            transform: translateY(-2px);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+        }
+        
+        .enter-btn:active {
+            transform: translateY(0) scale(0.98);
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
         }
 
         @media (max-width: 480px) {
@@ -245,7 +429,7 @@
         </div>
 
         <div class="calculator-section">
-            <div id="ohmsCalculator">
+            <div id="ohmsCalculator" class="text-center">
                 <div class="formula">
                     <div><strong>Ohm's Law Formulas:</strong></div>
                     <div>V = I × R</div>
@@ -253,26 +437,33 @@
                     <div>R = V ÷ I</div>
                 </div>
                 
-                <div class="grid">
-                    <div class="input-group">
-                        <label for="voltage">Voltage (V)</label>
-                        <input type="number" id="voltage" placeholder="Enter voltage" step="0.01">
+                <div class="triangle-inputs">
+                    <div class="input-row top">
+                        <div class="input-group">
+                            <label for="voltage">Voltage (V)</label>
+                            <input type="number" id="voltage" placeholder="Enter voltage" step="0.01">
+                            <div class="input-display" id="voltage-display"></div>
+                        </div>
                     </div>
-                    <div class="input-group">
-                        <label for="current">Current (I) - Amps</label>
-                        <input type="number" id="current" placeholder="Enter current" step="0.01">
+                    <div class="input-row bottom">
+                        <div class="input-group">
+                            <label for="current">Current (I) - Amps</label>
+                            <input type="number" id="current" placeholder="Enter current" step="0.01">
+                            <div class="input-display" id="current-display"></div>
+                        </div>
+                        <div class="input-group">
+                            <label for="resistance">Resistance (R) - Ω</label>
+                            <input type="number" id="resistance" placeholder="Enter resistance" step="0.01">
+                            <div class="input-display" id="resistance-display"></div>
+                        </div>
                     </div>
-                </div>
-                <div class="input-group">
-                    <label for="resistance">Resistance (R) - Ohms</label>
-                    <input type="number" id="resistance" placeholder="Enter resistance" step="0.01">
                 </div>
                 
                 <button class="calculate-btn" onclick="calculateOhms()">Calculate Missing Value</button>
                 <div id="ohmsResult"></div>
             </div>
 
-            <div id="wattsCalculator" class="hidden">
+            <div id="wattsCalculator" class="hidden text-center">
                 <div class="formula">
                     <div><strong>Watt's Law Formulas:</strong></div>
                     <div>P = V × I</div>
@@ -280,19 +471,26 @@
                     <div>I = P ÷ V</div>
                 </div>
                 
-                <div class="grid">
-                    <div class="input-group">
-                        <label for="power">Power (P) - Watts</label>
-                        <input type="number" id="power" placeholder="Enter power" step="0.01">
+                <div class="triangle-inputs">
+                    <div class="input-row top">
+                        <div class="input-group">
+                            <label for="power">Power (P) - Watts</label>
+                            <input type="number" id="power" placeholder="Enter power" step="0.01">
+                            <div class="input-display" id="power-display"></div>
+                        </div>
                     </div>
-                    <div class="input-group">
-                        <label for="wattVoltage">Voltage (V)</label>
-                        <input type="number" id="wattVoltage" placeholder="Enter voltage" step="0.01">
+                    <div class="input-row bottom">
+                        <div class="input-group">
+                            <label for="wattVoltage">Voltage (V)</label>
+                            <input type="number" id="wattVoltage" placeholder="Enter voltage" step="0.01">
+                            <div class="input-display" id="wattVoltage-display"></div>
+                        </div>
+                        <div class="input-group">
+                            <label for="wattCurrent">Current (I) - Amps</label>
+                            <input type="number" id="wattCurrent" placeholder="Enter current" step="0.01">
+                            <div class="input-display" id="wattCurrent-display"></div>
+                        </div>
                     </div>
-                </div>
-                <div class="input-group">
-                    <label for="wattCurrent">Current (I) - Amps</label>
-                    <input type="number" id="wattCurrent" placeholder="Enter current" step="0.01">
                 </div>
                 
                 <button class="calculate-btn" onclick="calculateWatts()">Calculate Missing Value</button>
@@ -301,9 +499,45 @@
         </div>
     </div>
 
+    <!-- Number Picker Overlay -->
+    <div class="number-picker-overlay" id="number-picker" style="display: none;">
+        <div class="number-picker-container">
+            <button class="close-picker" id="close-picker">×</button>
+            <div class="picker-content">
+                <div class="number-scroll" id="whole-scroll">
+                    <div class="number-option">0</div>
+                    <div class="number-option">1</div>
+                    <div class="number-option">2</div>
+                    <div class="number-option">3</div>
+                    <div class="number-option">4</div>
+                    <div class="number-option">5</div>
+                    <div class="number-option">6</div>
+                    <div class="number-option">7</div>
+                    <div class="number-option">8</div>
+                    <div class="number-option">9</div>
+                </div>
+                <div class="fraction-scroll" id="decimal-scroll">
+                    <div class="fraction-option">.0</div>
+                    <div class="fraction-option">.1</div>
+                    <div class="fraction-option">.2</div>
+                    <div class="fraction-option">.3</div>
+                    <div class="fraction-option">.4</div>
+                    <div class="fraction-option">.5</div>
+                    <div class="fraction-option">.6</div>
+                    <div class="fraction-option">.7</div>
+                    <div class="fraction-option">.8</div>
+                    <div class="fraction-option">.9</div>
+                </div>
+            </div>
+            <button class="enter-btn" id="enter-btn">Enter</button>
+        </div>
+    </div>
+
     <script>
-        // Law switching functionality
-        document.querySelectorAll('.law-btn').forEach(btn => {
+        // Wait for DOM to be fully loaded
+        document.addEventListener('DOMContentLoaded', function() {
+            // Law switching functionality
+            document.querySelectorAll('.law-btn').forEach(btn => {
             btn.addEventListener('click', function() {
                 const law = this.dataset.law;
                 switchLaw(law);
@@ -353,102 +587,277 @@
 
         // Ohm's Law Calculator
         function calculateOhms() {
-            const voltage = parseFloat(document.getElementById('voltage').value);
-            const current = parseFloat(document.getElementById('current').value);
-            const resistance = parseFloat(document.getElementById('resistance').value);
-
-            let result = '';
-            let explanation = '';
-
-            // Count how many values we have
-            const values = [voltage, current, resistance].filter(v => !isNaN(v));
+            const voltage = parseFloat(document.getElementById('voltage').value) || '';
+            const current = parseFloat(document.getElementById('current').value) || '';
+            const resistance = parseFloat(document.getElementById('resistance').value) || '';
+            
+            const resultDiv = document.getElementById('ohmsResult');
+            
+            // Count non-empty values
+            const values = [voltage, current, resistance].filter(v => v !== '');
             
             if (values.length < 2) {
-                result = '<div class="result">Please enter at least 2 values to calculate the third.</div>';
-            } else if (values.length === 3) {
-                // Verify the calculation
-                const calculatedV = current * resistance;
-                const calculatedI = voltage / resistance;
-                const calculatedR = voltage / current;
-                
-                if (Math.abs(voltage - calculatedV) < 0.01) {
-                    result = '<div class="result">✓ Your values are correct! V = I × R</div>';
+                resultDiv.innerHTML = '<div class="result">Enter any two values to calculate the third</div>';
+                return;
+            }
+            
+            let result = '';
+            
+            // Calculate missing value
+            if (voltage === '' && current !== '' && resistance !== '') {
+                const v = (current * resistance).toFixed(2);
+                document.getElementById('voltage').value = v;
+                document.getElementById('voltage-display').textContent = v;
+                result = `Voltage (V) = ${v} V`;
+            } 
+            else if (current === '' && voltage !== '' && resistance !== '') {
+                if (resistance == 0) {
+                    result = 'Resistance cannot be zero when calculating current';
                 } else {
-                    result = '<div class="result">⚠️ Check your values - they don\'t match Ohm\'s Law</div>';
-                }
-            } else {
-                // Calculate missing value
-                if (isNaN(voltage)) {
-                    const calculatedV = current * resistance;
-                    result = `<div class="result">Voltage (V) = ${calculatedV.toFixed(2)} V</div>`;
-                    explanation = `<div class="explanation">Using V = I × R<br>V = ${current} A × ${resistance} Ω = ${calculatedV.toFixed(2)} V</div>`;
-                } else if (isNaN(current)) {
-                    const calculatedI = voltage / resistance;
-                    result = `<div class="result">Current (I) = ${calculatedI.toFixed(2)} A</div>`;
-                    explanation = `<div class="explanation">Using I = V ÷ R<br>I = ${voltage} V ÷ ${resistance} Ω = ${calculatedI.toFixed(2)} A</div>`;
-                } else if (isNaN(resistance)) {
-                    const calculatedR = voltage / current;
-                    result = `<div class="result">Resistance (R) = ${calculatedR.toFixed(2)} Ω</div>`;
-                    explanation = `<div class="explanation">Using R = V ÷ I<br>R = ${voltage} V ÷ ${current} A = ${calculatedR.toFixed(2)} Ω</div>`;
+                    const i = (voltage / resistance).toFixed(2);
+                    document.getElementById('current').value = i;
+                    document.getElementById('current-display').textContent = i;
+                    result = `Current (I) = ${i} A`;
                 }
             }
-
-            document.getElementById('ohmsResult').innerHTML = result + explanation;
+            else if (resistance === '' && voltage !== '' && current !== '') {
+                if (current == 0) {
+                    result = 'Current cannot be zero when calculating resistance';
+                } else {
+                    const r = (voltage / current).toFixed(2);
+                    document.getElementById('resistance').value = r;
+                    document.getElementById('resistance-display').textContent = r;
+                    result = `Resistance (R) = ${r} Ω`;
+                }
+            }
+            
+            // If all three values are present, verify the calculation
+            if (values.length === 3) {
+                if (Math.abs(voltage - (current * resistance)) < 0.01) {
+                    result = '✓ Values are correct! V = I × R';
+                } else {
+                    result = '⚠️ Values do not match V = I × R';
+                }
+            }
+            
+            resultDiv.innerHTML = `<div class="result">${result}</div>`;
         }
 
         // Watt's Law Calculator
         function calculateWatts() {
-            const power = parseFloat(document.getElementById('power').value);
-            const wattVoltage = parseFloat(document.getElementById('wattVoltage').value);
-            const wattCurrent = parseFloat(document.getElementById('wattCurrent').value);
-
-            let result = '';
-            let explanation = '';
-
-            // Count how many values we have
-            const values = [power, wattVoltage, wattCurrent].filter(v => !isNaN(v));
+            const power = parseFloat(document.getElementById('power').value) || '';
+            const voltage = parseFloat(document.getElementById('wattVoltage').value) || '';
+            const current = parseFloat(document.getElementById('wattCurrent').value) || '';
+            
+            const resultDiv = document.getElementById('wattsResult');
+            
+            // Count non-empty values
+            const values = [power, voltage, current].filter(v => v !== '');
             
             if (values.length < 2) {
-                result = '<div class="result">Please enter at least 2 values to calculate the third.</div>';
-            } else if (values.length === 3) {
-                // Verify the calculation
-                const calculatedP = wattVoltage * wattCurrent;
-                
-                if (Math.abs(power - calculatedP) < 0.01) {
-                    result = '<div class="result">✓ Your values are correct! P = V × I</div>';
+                resultDiv.innerHTML = '<div class="result">Enter any two values to calculate the third</div>';
+                return;
+            }
+            
+            let result = '';
+            
+            // Calculate missing value
+            if (power === '' && voltage !== '' && current !== '') {
+                const p = (voltage * current).toFixed(2);
+                document.getElementById('power').value = p;
+                document.getElementById('power-display').textContent = p;
+                result = `Power (P) = ${p} W`;
+            } 
+            else if (voltage === '' && power !== '' && current !== '') {
+                if (current == 0) {
+                    result = 'Current cannot be zero when calculating voltage';
                 } else {
-                    result = '<div class="result">⚠️ Check your values - they don\'t match Watt\'s Law</div>';
-                }
-            } else {
-                // Calculate missing value
-                if (isNaN(power)) {
-                    const calculatedP = wattVoltage * wattCurrent;
-                    result = `<div class="result">Power (P) = ${calculatedP.toFixed(2)} W</div>`;
-                    explanation = `<div class="explanation">Using P = V × I<br>P = ${wattVoltage} V × ${wattCurrent} A = ${calculatedP.toFixed(2)} W</div>`;
-                } else if (isNaN(wattVoltage)) {
-                    const calculatedV = power / wattCurrent;
-                    result = `<div class="result">Voltage (V) = ${calculatedV.toFixed(2)} V</div>`;
-                    explanation = `<div class="explanation">Using V = P ÷ I<br>V = ${power} W ÷ ${wattCurrent} A = ${calculatedV.toFixed(2)} V</div>`;
-                } else if (isNaN(wattCurrent)) {
-                    const calculatedI = power / wattVoltage;
-                    result = `<div class="result">Current (I) = ${calculatedI.toFixed(2)} A</div>`;
-                    explanation = `<div class="explanation">Using I = P ÷ V<br>I = ${power} W ÷ ${wattVoltage} V = ${calculatedI.toFixed(2)} A</div>`;
+                    const v = (power / current).toFixed(2);
+                    document.getElementById('wattVoltage').value = v;
+                    document.getElementById('wattVoltage-display').textContent = v;
+                    result = `Voltage (V) = ${v} V`;
                 }
             }
-
-            document.getElementById('wattsResult').innerHTML = result + explanation;
+            else if (current === '' && power !== '' && voltage !== '') {
+                if (voltage == 0) {
+                    result = 'Voltage cannot be zero when calculating current';
+                } else {
+                    const i = (power / voltage).toFixed(2);
+                    document.getElementById('wattCurrent').value = i;
+                    document.getElementById('wattCurrent-display').textContent = i;
+                    result = `Current (I) = ${i} A`;
+                }
+            }
+            
+            // If all three values are present, verify the calculation
+            if (values.length === 3) {
+                if (Math.abs(power - (voltage * current)) < 0.01) {
+                    result = '✓ Values are correct! P = V × I';
+                } else {
+                    result = '⚠️ Values do not match P = V × I';
+                }
+            }
+            
+            resultDiv.innerHTML = `<div class="result">${result}</div>`;
         }
 
-        // Auto-calculate on input change
-        document.querySelectorAll('input').forEach(input => {
-            input.addEventListener('input', function() {
-                if (this.id.includes('watt') || this.id === 'power') {
-                    calculateWatts();
+        // Number Picker Functionality
+        let currentInput = null;
+        let wholeNumber = '0';
+        let decimalNumber = '0';
+        
+        function showNumberPicker(inputId) {
+            currentInput = document.getElementById(inputId);
+            const currentValue = currentInput.value || '';
+            
+            // Parse current value into whole and decimal parts
+            const parts = currentValue.split('.');
+            wholeNumber = parts[0] || '0';
+            decimalNumber = parts[1] ? '.' + parts[1] : '.0';
+            
+            // Show the picker
+            const picker = document.getElementById('number-picker');
+            picker.style.display = 'flex';
+            
+            // Initialize selections
+            updateSelections();
+            
+            // Close picker when clicking outside
+            const closeOnClick = (e) => {
+                if (e.target === picker) {
+                    picker.style.display = 'none';
+                    document.removeEventListener('click', closeOnClick);
+                }
+            };
+            
+            setTimeout(() => {
+                document.addEventListener('click', closeOnClick);
+            }, 100);
+        }
+        
+        function updateSelections() {
+            // Update whole number selection
+            document.querySelectorAll('#whole-scroll .number-option').forEach(option => {
+                option.classList.toggle('selected', option.textContent === wholeNumber);
+            });
+            
+            // Update decimal selection
+            document.querySelectorAll('#decimal-scroll .fraction-option').forEach(option => {
+                option.classList.toggle('selected', option.textContent === decimalNumber);
+            });
+        }
+        
+        // Close picker when clicking outside
+        document.addEventListener('click', (e) => {
+            if (e.target === document.getElementById('number-picker')) {
+                document.getElementById('number-picker').style.display = 'none';
+            }
+        });
+
+        // Close button
+        document.getElementById('close-picker').addEventListener('click', () => {
+            document.getElementById('number-picker').style.display = 'none';
+        });
+
+        // Enter button
+        document.getElementById('enter-btn').addEventListener('click', () => {
+            updateInputValue();
+            document.getElementById('number-picker').style.display = 'none';
+        });
+
+        // Handle number selection
+        document.addEventListener('click', (e) => {
+            // Whole number selection
+            if (e.target.classList.contains('number-option') && e.target.closest('#whole-scroll')) {
+                wholeNumber = e.target.textContent;
+                updateInputValue();
+                updateSelections();
+            }
+            
+            // Decimal selection
+            if (e.target.classList.contains('fraction-option') && e.target.closest('#decimal-scroll')) {
+                decimalNumber = e.target.textContent;
+                updateInputValue();
+                updateSelections();
+            }
+        });
+        
+        function updateInputValue() {
+            if (!currentInput) return;
+            
+            let value = wholeNumber;
+            if (decimalNumber !== '.0') {
+                value += decimalNumber;
+            }
+            
+            // Remove leading zero if needed
+            if (value.startsWith('0') && value.length > 1 && value[1] !== '.') {
+                value = value.substring(1);
+            }
+            
+            currentInput.value = value === '0' ? '' : value;
+            
+            // Update display
+            const display = document.getElementById(`${currentInput.id}-display`);
+            if (display) {
+                display.textContent = value === '0' ? currentInput.placeholder : value;
+                display.style.color = value === '0' ? '#aaa' : '#fff';
+            }
+            
+            // Trigger change event
+            const event = new Event('change');
+            currentInput.dispatchEvent(event);
+        }
+
+        // Add input event listeners for auto-calculation
+        document.getElementById('voltage').addEventListener('change', calculateOhms);
+        document.getElementById('current').addEventListener('change', calculateOhms);
+        document.getElementById('resistance').addEventListener('change', calculateOhms);
+        document.getElementById('power').addEventListener('change', calculateWatts);
+        document.getElementById('wattVoltage').addEventListener('change', calculateWatts);
+        document.getElementById('wattCurrent').addEventListener('change', calculateWatts);
+        document.getElementById('power').addEventListener('input', calculateWatts);
+        document.getElementById('wattVoltage').addEventListener('input', calculateWatts);
+        document.getElementById('wattCurrent').addEventListener('input', calculateWatts);
+
+        // Update input fields to use number picker
+        document.querySelectorAll('input[type="number"]').forEach(input => {
+            // Hide the original input
+            input.style.display = 'none';
+            
+            // Create a display div
+            const display = document.createElement('div');
+            display.className = 'input-display';
+            display.textContent = input.placeholder;
+            display.style.cursor = 'pointer';
+            display.style.padding = '10px';
+            display.style.border = '1px solid #ddd';
+            display.style.borderRadius = '5px';
+            display.style.minHeight = '40px';
+            display.style.display = 'flex';
+            display.style.alignItems = 'center';
+            display.style.marginBottom = '10px';
+            
+            // Insert the display after the input
+            input.parentNode.insertBefore(display, input.nextSibling);
+            
+            // Update display when input changes (from calculations)
+            input.addEventListener('change', () => {
+                if (input.value) {
+                    display.textContent = input.value;
+                    display.style.color = '#333';
                 } else {
-                    calculateOhms();
+                    display.textContent = input.placeholder;
+                    display.style.color = '#999';
                 }
             });
-        });
+            
+            // Show number picker when display is clicked
+            display.addEventListener('click', () => {
+                showNumberPicker(input.id);
+            });
+            });
+        }); // End of DOMContentLoaded
     </script>
 </body>
 </html>
