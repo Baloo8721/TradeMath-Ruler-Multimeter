@@ -588,6 +588,19 @@
             position: relative;
         }
 
+        .number-option, .fraction-option {
+            padding: 10px 20px;
+            margin: 3px 0;
+            cursor: pointer;
+            border-radius: 6px;
+            transition: all 0.2s ease;
+            scroll-snap-align: center;
+            min-width: 60px;
+            text-align: center;
+            background: rgba(255, 255, 255, 0.05);
+            color: #fff;
+        }
+
         .color-btn {
             padding: 10px 20px;
             border-radius: 5px;
@@ -619,25 +632,30 @@
 
         /* Custom Number Picker */
         .number-picker-overlay {
-            display: none;
             position: fixed;
-            bottom: 0;
-            left: 0;
-            right: 0;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
             background: #2a2a2a;
-            border-top: 2px solid #00ffff;
-            padding: 15px;
+            border: 2px solid #00ffff;
+            border-radius: 12px;
+            padding: 20px;
             z-index: 1000;
-            box-shadow: 0 -5px 15px rgba(0,0,0,0.3);
+            box-shadow: 0 5px 25px rgba(0,0,0,0.5);
+            max-width: 90%;
+            max-height: 90vh;
+            overflow: auto;
         }
 
         .number-picker-container {
             display: flex;
-            gap: 10px;
-            margin-bottom: 10px;
-            max-width: 100%;
-            overflow-x: auto;
-            padding-bottom: 5px;
+            gap: 15px;
+            background: #2a2a2a;
+            padding: 15px;
+            border-radius: 8px;
+            width: auto;
+            justify-content: center;
+            align-items: center;
         }
 
         .number-scroll {
@@ -660,24 +678,32 @@
         }
 
         .number-option {
-            padding: 8px 15px;
             font-size: 1.2em;
-            color: #fff;
-            scroll-snap-align: center;
-            cursor: pointer;
-            text-align: center;
-            min-width: 30px;
+            min-width: 60px;
         }
 
-        .number-option:hover, .number-option.selected {
+        .fraction-option {
+            min-width: 80px;
+        }
+
+        .number-option:hover, .fraction-option:hover {
+            background: rgba(0, 255, 255, 0.1);
+            transform: scale(1.05);
+        }
+        
+        .number-option.selected, .fraction-option.selected {
             color: #00ffff;
             font-weight: bold;
+            background: rgba(0, 255, 255, 0.2);
+            box-shadow: 0 0 10px rgba(0, 255, 255, 0.3);
         }
 
         .fraction-scroll {
             display: flex;
             flex-direction: column;
             align-items: center;
+            width: 120px; /* Fixed width, twice as wide as number-scroll */
+            min-width: 120px;
             max-height: 200px;
             overflow-y: auto;
             scroll-snap-type: y mandatory;
@@ -817,7 +843,7 @@
                     </div>
                     
                     <!-- Custom Number Picker Overlay -->
-                    <div class="number-picker-overlay" id="number-picker">
+                    <div class="number-picker-overlay" id="number-picker" style="display: none;">
                         <div class="number-picker-container">
                             <div class="number-scroll" id="inches-scroll">
                                 <div class="number-option">0</div>
@@ -877,6 +903,7 @@
                 <li>Look for the number next to each inch.</li>
                 <li>Notice the halfway mark between inches.</li>
                 <li>Count smaller marks for fractions.</li>
+                <li>For 1/16th marks, count each small line (1/16, 2/16=1/8, 3/16, etc.).</li>
                 <li>Always double-check your answer.</li>
             </ul>
         </div>
