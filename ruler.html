@@ -51,16 +51,26 @@
         }
 
         .btn {
-            padding: 15px;
-            font-size: 16px;
-            border-radius: 8px;
-            border: none;
-            background: #3498db;
-            color: white;
-            touch-action: manipulation;
-            -webkit-tap-highlight-color: transparent;
+            padding: 10px 15px;
+            font-size: 14px;
+            border-radius: 5px;
+            border: 1px solid #00ffff;
+            background-color: #1a1a2e;
+            color: #00ffff;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            min-width: 120px;
+            font-family: 'Courier New', monospace;
         }
-
+        
+        .btn:hover, 
+        .btn:focus {
+            background: rgba(0, 255, 255, 0.2);
+            box-shadow: 0 0 15px rgba(0, 255, 255, 0.4);
+            transform: translateY(-1px);
+            outline: none;
+        }
+        
         .btn:active {
             transform: translateY(1px);
         }
@@ -88,22 +98,40 @@
         .lesson-selector {
             display: flex;
             justify-content: center;
-            gap: 10px;
-            margin-bottom: 30px;
-            flex-wrap: wrap;
+            overflow-x: auto;
+            scrollbar-width: none; /* Firefox */
+            -ms-overflow-style: none; /* IE and Edge */
+            padding: 15px 10px;
+            margin: 0 auto 30px;
+            max-width: 500px;
+            gap: 8px;
+            -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
+            white-space: nowrap;
         }
 
         .lesson-btn {
-            background: transparent;
-            border: 2px solid #00ffff;
+            padding: 10px 15px;
+            background: #1a1a2e;
+            border: 1px solid #00ffff;
             color: #00ffff;
-            padding: 12px 24px;
             border-radius: 5px;
             cursor: pointer;
             transition: all 0.3s ease;
-            font-size: 16px;
-            text-transform: uppercase;
-            letter-spacing: 1px;
+            font-family: 'Courier New', monospace;
+            white-space: nowrap;
+            flex: 0 0 auto;
+            font-size: 14px;
+        }
+        
+        /* Hide scrollbar for Chrome, Safari and Opera */
+        .lesson-selector::-webkit-scrollbar {
+            display: none;
+        }
+        
+        /* Ensure buttons have equal width */
+        .lesson-btn {
+            min-width: 80px;
+            text-align: center;
         }
 
         .lesson-btn:hover, 
@@ -127,7 +155,7 @@
             position: relative;
             height: 160px;
             background: #1a1a1a;
-            border-radius: 10px;
+            border-radius: 0px;
             overflow-x: scroll;
             overflow-y: hidden;
             margin: 20px 0;
@@ -146,7 +174,7 @@
             border: none;
             border-radius: 5px;
             width: calc(72px * 12 * var(--device-pixel-ratio, 1));
-            min-width: 100%;
+            min-width: 130%;
         }
 
         .tape-marks {
@@ -298,24 +326,18 @@
         }
 
         .reading-display {
-            background: rgba(0, 255, 255, 0.1);
-            border: 2px solid #00ffff;
-            border-radius: 10px;
-            padding: 20px;
             text-align: center;
-            margin-bottom: 20px;
-        }
-
-        .reading-display h3 {
-            margin-bottom: 10px;
-            font-size: 1.5em;
+            margin: 20px 0;
+            padding: 0;
+            background: transparent;
         }
 
         .reading-value {
-            font-size: 2em;
+            font-size: 2.5em;
             font-weight: bold;
-            color: #ffff00;
-            text-shadow: 0 0 10px #ffff00;
+            margin: 20px 0 10px;
+            color: #00ffff;
+            text-shadow: 0 0 10px rgba(0, 255, 255, 0.5);
         }
 
         .reading-display .controls {
@@ -445,15 +467,14 @@
         </div>
 
         <div class="lesson-info">
-            <h2 id="lesson-title">Basic Measuring Tape Reading</h2>
-            <p id="lesson-description">Learn to read whole inches and major fractions on a measuring tape.</p>
+            <h2 id="lesson-title"></h2>
         </div>
 
         <div class="lesson-selector">
-            <button class="lesson-btn active" onclick="setLesson('basic')">Basic Reading</button>
+            <button class="lesson-btn active" onclick="setLesson('basic')">Basic</button>
             <button class="lesson-btn" onclick="setLesson('fractions')">Fractions</button>
             <button class="lesson-btn" onclick="setLesson('precision')">Precision</button>
-            <button class="lesson-btn" onclick="setLesson('quiz')">Quiz Mode</button>
+            <button class="lesson-btn" onclick="setLesson('quiz')">Quiz</button>
         </div>
 
         <div class="measuring-area">
@@ -470,13 +491,11 @@
             </div>
 
             <div class="reading-display">
-                <h3>Current Reading</h3>
-                <div class="reading-value" id="reading-value">Click 'New Measurement' to start</div>
+                <div class="reading-value" id="reading-value"></div>
                 <div class="quiz-question" id="quiz-question" style="display: none;">What is the measurement shown?</div>
-                <div class="controls">
+                <div class="controls" style="display: flex; justify-content: center; gap: 10px; margin-top: 15px;">
                     <button class="btn" onclick="generateRandomMeasurement()">New Measurement</button>
-                    <button class="btn" onclick="showAnswer()">Show Answer</button>
-                    <button class="btn" onclick="resetTape()">Reset</button>
+                    <button class="btn show-answer-btn" onclick="showAnswer()" style="display: none;">Show Answer</button>
                     <div class="quiz-controls" style="display: none;">
                         <input type="text" class="quiz-input" id="quiz-input" placeholder="Enter measurement">
                         <button class="btn" onclick="checkAnswer()">Check</button>
@@ -507,7 +526,7 @@
 
         const lessons = {
             basic: {
-                title: "Basic Measuring Tape Reading",
+                title: "Basic Measuring",
                 description: "Learn to read whole inches and major fractions on a measuring tape.",
                 tips: [
                     "Start by identifying the whole inch marks (longest lines)",
@@ -698,6 +717,7 @@
 
         function setLesson(lesson) {
             currentLesson = lesson;
+            const wasQuizMode = quizMode;
             quizMode = lesson === 'quiz';
             
             // Update UI
@@ -705,25 +725,30 @@
             event.target.classList.add('active');
             
             document.getElementById('lesson-title').textContent = lessons[lesson].title;
-            document.getElementById('lesson-description').textContent = lessons[lesson].description;
-            
-            const tipsList = document.getElementById('tips-list');
-            tipsList.innerHTML = '';
-            lessons[lesson].tips.forEach(tip => {
-                const li = document.createElement('li');
-                li.textContent = tip;
-                tipsList.appendChild(li);
-            });
             
             // Show/hide quiz section
-            document.getElementById('quiz-question').style.display = quizMode ? 'block' : 'none';
-            document.querySelector('.quiz-controls').style.display = quizMode ? 'block' : 'none';
-            
-            // Reset score when changing lessons
+            const showAnswerBtn = document.querySelector('.show-answer-btn');
             if (quizMode) {
+                // Entering quiz mode
+                document.getElementById('quiz-question').style.display = 'block';
+                document.querySelector('.quiz-controls').style.display = 'block';
+                if (showAnswerBtn) showAnswerBtn.style.display = 'block';
+                
+                // Reset score and generate first question
                 score = { correct: 0, total: 0 };
                 updateScore();
             }
+            
+            // Always generate a new measurement when switching modes
+            if (!quizMode) {
+                // Exiting quiz mode
+                document.getElementById('quiz-question').style.display = 'none';
+                document.querySelector('.quiz-controls').style.display = 'none';
+                if (showAnswerBtn) showAnswerBtn.style.display = 'none';
+            }
+            
+            // Generate new measurement for any mode change
+            generateRandomMeasurement();
         }
 
         function generateRandomMeasurement() {
@@ -792,7 +817,7 @@
         function resetTape() {
             currentMeasurement = 0;
             movePointer(0);
-            document.getElementById('reading-value').textContent = "Click 'New Measurement' to start";
+            document.getElementById('reading-value').textContent = "";
             document.getElementById('quiz-feedback').textContent = "";
             document.getElementById('quiz-input').value = "";
         }
@@ -834,6 +859,16 @@
             document.querySelectorAll('.fraction-label').forEach(label => label.style.color = markColor);
             document.querySelectorAll('.color-btn').forEach(btn => btn.classList.remove('active'));
             event.target.classList.add('active');
+            
+            // Update reading value color to match the theme button colors
+            const readingValue = document.getElementById('reading-value');
+            if (color === '#ffdd00') { // Yellow theme
+                readingValue.style.color = '#ffdd00';
+            } else if (color === '#39ff14') { // Green theme
+                readingValue.style.color = '#39ff14';
+            } else { // Dark theme
+                readingValue.style.color = '#00ffff';
+            }
         }
 
         // Enter key support for quiz
