@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -122,11 +123,11 @@
 
         input {
             width: 100%;
-            max-width: 200px;
-            padding: 10px 12px;
+            max-width: 240px;
+            padding: 12px 14px;
             border: 2px solid #ddd;
-            border-radius: 8px;
-            font-size: 16px;
+            border-radius: 10px;
+            font-size: 18px;
             transition: border-color 0.3s ease;
             margin: 0 auto;
             display: block;
@@ -157,6 +158,24 @@
             box-shadow: 0 10px 20px rgba(52, 152, 219, 0.3);
         }
 
+        .clear-btn {
+            width: 100%;
+            padding: 12px;
+            background: #ecf0f1;
+            color: #2c3e50;
+            border: none;
+            border-radius: 10px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            margin: 8px 0 12px 0;
+        }
+
+        .clear-btn:hover {
+            background: #e5eaee;
+        }
+
         .result {
             background: #e8f5e8;
             border-left: 4px solid #27ae60;
@@ -165,6 +184,13 @@
             margin-top: 15px;
             font-weight: 600;
             color: #27ae60;
+        }
+
+        .result.error {
+            background: #fdecea;
+            border-left-color: #e74c3c;
+            color: #c0392b;
+            box-shadow: 0 4px 14px rgba(231, 76, 60, 0.15);
         }
 
         .text-center {
@@ -210,21 +236,162 @@
             gap: 15px;
             margin: 20px 0;
         }
-        
+
+        /* Numeric Picker Overlay */
+        .picker-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.45);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            padding: 16px;
+        }
+
+        .picker-modal {
+            background: #ffffff;
+            border-radius: 12px;
+            width: 100%;
+            max-width: 420px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.25);
+            overflow: hidden;
+        }
+
+        .picker-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 14px;
+            background: #f3f6fb;
+            border-bottom: 1px solid #e6ecf5;
+        }
+
+        .picker-title {
+            font-weight: 700;
+            color: #2c3e50;
+        }
+
+        .picker-close {
+            border: none;
+            background: transparent;
+            font-size: 20px;
+            line-height: 1;
+            cursor: pointer;
+            color: #7f8c8d;
+        }
+
+        .picker-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            padding: 14px;
+        }
+
+        .picker-list {
+            max-height: 260px;
+            overflow: auto;
+            border: 1px solid #ecf0f1;
+            border-radius: 8px;
+        }
+
+        .picker-list button {
+            width: 100%;
+            text-align: left;
+            padding: 10px 12px;
+            border: none;
+            background: #fff;
+            border-bottom: 1px solid #f2f4f6;
+            cursor: pointer;
+            font-weight: 600;
+            color: #34495e;
+        }
+
+        .picker-list button:hover {
+            background: #f7fbff;
+        }
+
+        .picker-keypad {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+            align-content: start;
+        }
+
+        .picker-display {
+            grid-column: span 3;
+            padding: 10px;
+            border: 2px solid #3498db;
+            border-radius: 8px;
+            font-size: 18px;
+            text-align: right;
+            font-weight: 700;
+            color: #2c3e50;
+            min-height: 44px;
+        }
+
+        .key-btn {
+            padding: 12px 10px;
+            border: 1px solid #ecf0f1;
+            border-radius: 8px;
+            background: #ffffff;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            color: #2c3e50;
+        }
+
+        .key-btn.primary {
+            background: #3498db;
+            color: #fff;
+            border-color: #3498db;
+        }
+
+        .picker-actions {
+            display: flex;
+            gap: 10px;
+            padding: 0 14px 14px 14px;
+        }
+
+        .picker-actions .action-btn {
+            flex: 1;
+            padding: 12px;
+            border-radius: 8px;
+            border: none;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        .action-cancel {
+            background: #ecf0f1;
+            color: #2c3e50;
+        }
+
+        .action-apply {
+            background: #27ae60;
+            color: #fff;
+        }
+
+        /* Input error highlight */
+        .input-error {
+            color: #c0392b !important;
+            font-weight: 700 !important;
+        }
+
         .input-row {
             display: flex;
             justify-content: center;
             width: 100%;
         }
-        
+
         .input-row.top {
             margin-bottom: 10px;
         }
-        
+
         .input-row.bottom {
             gap: 30px;
         }
-        
+
         .input-group {
             display: flex;
             flex-direction: column;
@@ -233,13 +400,13 @@
             min-width: 120px;
             max-width: 160px;
         }
-        
+
         .input-group label {
             font-size: 0.9em;
             margin-bottom: 5px;
             white-space: nowrap;
         }
-        
+
         .input-group input {
             width: 100%;
             text-align: center;
@@ -251,22 +418,40 @@
                 padding: 20px;
                 margin: 10px;
             }
-            
+
             .triangle {
                 width: 160px;
                 height: 160px;
             }
-            
+
             .grid {
                 grid-template-columns: 1fr;
+            }
+
+            /* Mobile-first input ergonomics */
+            label {
+                font-size: 1rem;
+            }
+
+            input {
+                max-width: 100%;
+                font-size: 20px;
+                padding: 14px 16px;
+                border-radius: 12px;
+            }
+
+            .input-group {
+                min-width: 140px;
+                max-width: 100%;
             }
         }
     </style>
 </head>
+
 <body>
     <div class="container">
         <h1>⚡ Electrical Trades Calculator</h1>
-        
+
         <div class="law-selector">
             <button class="law-btn active" data-law="ohms">Ohm's Law</button>
             <button class="law-btn" data-law="watts">Watt's Law</button>
@@ -275,20 +460,20 @@
         <div class="triangle-container">
             <div class="triangle" id="ohmsTriangle">
                 <svg viewBox="0 0 200 200">
-                    <polygon points="100,20 20,160 180,160" fill="#3498db" stroke="#2980b9" stroke-width="3"/>
-                    <line x1="100" y1="20" x2="100" y2="160" stroke="#2980b9" stroke-width="2"/>
-                    <line x1="20" y1="160" x2="180" y2="160" stroke="#2980b9" stroke-width="2"/>
+                    <polygon points="100,20 20,160 180,160" fill="#3498db" stroke="#2980b9" stroke-width="3" />
+                    <line x1="100" y1="20" x2="100" y2="160" stroke="#2980b9" stroke-width="2" />
+                    <line x1="20" y1="160" x2="180" y2="160" stroke="#2980b9" stroke-width="2" />
                     <text x="100" y="70" class="triangle-section" fill="white" data-var="V">V</text>
                     <text x="70" y="145" class="triangle-section" fill="white" data-var="I">I</text>
                     <text x="130" y="145" class="triangle-section" fill="white" data-var="R">R</text>
                 </svg>
             </div>
-            
+
             <div class="triangle hidden" id="wattsTriangle">
                 <svg viewBox="0 0 200 200">
-                    <polygon points="100,20 20,160 180,160" fill="#e74c3c" stroke="#c0392b" stroke-width="3"/>
-                    <line x1="100" y1="20" x2="100" y2="160" stroke="#c0392b" stroke-width="2"/>
-                    <line x1="20" y1="160" x2="180" y2="160" stroke="#c0392b" stroke-width="2"/>
+                    <polygon points="100,20 20,160 180,160" fill="#e74c3c" stroke="#c0392b" stroke-width="3" />
+                    <line x1="100" y1="20" x2="100" y2="160" stroke="#c0392b" stroke-width="2" />
+                    <line x1="20" y1="160" x2="180" y2="160" stroke="#c0392b" stroke-width="2" />
                     <text x="100" y="70" class="triangle-section" fill="white" data-var="P">P</text>
                     <text x="70" y="145" class="triangle-section" fill="white" data-var="V">V</text>
                     <text x="130" y="145" class="triangle-section" fill="white" data-var="I">I</text>
@@ -304,7 +489,7 @@
                     <div>I = V ÷ R</div>
                     <div>R = V ÷ I</div>
                 </div>
-                
+
                 <div class="triangle-inputs">
                     <div class="input-row top">
                         <div class="input-group">
@@ -323,8 +508,9 @@
                         </div>
                     </div>
                 </div>
-                
+
                 <button class="calculate-btn" onclick="calculateOhms()">Calculate Missing Value</button>
+                <button class="clear-btn" onclick="clearOhms()">Clear</button>
                 <div id="ohmsResult"></div>
             </div>
 
@@ -335,7 +521,7 @@
                     <div>V = P ÷ I</div>
                     <div>I = P ÷ V</div>
                 </div>
-                
+
                 <div class="triangle-inputs">
                     <div class="input-row top">
                         <div class="input-group">
@@ -354,9 +540,42 @@
                         </div>
                     </div>
                 </div>
-                
+
                 <button class="calculate-btn" onclick="calculateWatts()">Calculate Missing Value</button>
+                <button class="clear-btn" onclick="clearWatts()">Clear</button>
                 <div id="wattsResult"></div>
+            </div>
+        </div>
+    </div>
+    <!-- Numeric Picker Overlay -->
+    <div class="picker-overlay" id="pickerOverlay">
+        <div class="picker-modal" role="dialog" aria-modal="true" aria-labelledby="pickerTitle">
+            <div class="picker-header">
+                <div class="picker-title" id="pickerTitle">Select Value</div>
+                <button class="picker-close" id="pickerClose" aria-label="Close">×</button>
+            </div>
+            <div class="picker-content">
+                <div class="picker-list" id="pickerList"></div>
+                <div class="picker-keypad">
+                    <div class="picker-display" id="pickerDisplay"></div>
+                    <button class="key-btn">7</button>
+                    <button class="key-btn">8</button>
+                    <button class="key-btn">9</button>
+                    <button class="key-btn">4</button>
+                    <button class="key-btn">5</button>
+                    <button class="key-btn">6</button>
+                    <button class="key-btn">1</button>
+                    <button class="key-btn">2</button>
+                    <button class="key-btn">3</button>
+                    <button class="key-btn">0</button>
+                    <button class="key-btn">.</button>
+                    <button class="key-btn" data-action="back">⌫</button>
+                    <button class="key-btn primary" data-action="clear" style="grid-column: span 3;">Clear</button>
+                </div>
+            </div>
+            <div class="picker-actions">
+                <button class="action-btn action-cancel" id="pickerCancel">Cancel</button>
+                <button class="action-btn action-apply" id="pickerApply">Apply</button>
             </div>
         </div>
     </div>
@@ -364,7 +583,7 @@
     <script>
         // Law switching functionality
         document.querySelectorAll('.law-btn').forEach(btn => {
-            btn.addEventListener('click', function() {
+            btn.addEventListener('click', function () {
                 const law = this.dataset.law;
                 switchLaw(law);
             });
@@ -393,7 +612,7 @@
 
         // Triangle interaction
         document.querySelectorAll('.triangle-section').forEach(section => {
-            section.addEventListener('click', function() {
+            section.addEventListener('click', function () {
                 const variable = this.dataset.var;
                 highlightVariable(variable);
             });
@@ -404,7 +623,7 @@
             document.querySelectorAll('.triangle-section').forEach(section => {
                 section.classList.remove('highlight');
             });
-            
+
             // Highlight clicked variable
             document.querySelectorAll(`[data-var="${variable}"]`).forEach(section => {
                 section.classList.add('highlight');
@@ -422,7 +641,13 @@
 
             // Count how many values we have
             const values = [voltage, current, resistance].filter(v => !isNaN(v));
-            
+
+            // Clear previous error highlighting by default
+            ['voltage', 'current', 'resistance'].forEach(id => {
+                const el = document.getElementById(id);
+                if (el) el.classList.remove('input-error');
+            });
+
             if (values.length < 2) {
                 result = '<div class="result">Please enter at least 2 values to calculate the third.</div>';
             } else if (values.length === 3) {
@@ -430,26 +655,52 @@
                 const calculatedV = current * resistance;
                 const calculatedI = voltage / resistance;
                 const calculatedR = voltage / current;
-                
+
                 if (Math.abs(voltage - calculatedV) < 0.01) {
                     result = '<div class="result">✓ Your values are correct! V = I × R</div>';
                 } else {
-                    result = '<div class="result">⚠️ Check your values - they don\'t match Ohm\'s Law</div>';
+                    result = '<div class="result error">⚠️ Check your values - they don\'t match Ohm\'s Law</div>';
+                    // Highlight the most likely incorrect field in red
+                    const dv = Math.abs(voltage - calculatedV);
+                    const di = Math.abs(current - calculatedI);
+                    const dr = Math.abs(resistance - calculatedR);
+                    const max = Math.max(dv, di, dr);
+                    const vEl = document.getElementById('voltage');
+                    const iEl = document.getElementById('current');
+                    const rEl = document.getElementById('resistance');
+                    if (max === dv && vEl) vEl.classList.add('input-error');
+                    else if (vEl) vEl.classList.remove('input-error');
+                    if (max === di && iEl) iEl.classList.add('input-error');
+                    else if (iEl) iEl.classList.remove('input-error');
+                    if (max === dr && rEl) rEl.classList.add('input-error');
+                    else if (rEl) rEl.classList.remove('input-error');
                 }
             } else {
-                // Calculate missing value
+                // Calculate missing value and populate the corresponding input field
                 if (isNaN(voltage)) {
                     const calculatedV = current * resistance;
-                    result = `<div class="result">Voltage (V) = ${calculatedV.toFixed(2)} V</div>`;
-                    explanation = `<div class="explanation">Using V = I × R<br>V = ${current} A × ${resistance} Ω = ${calculatedV.toFixed(2)} V</div>`;
+                    result = `<div class=\"result\">Voltage (V) = ${calculatedV.toFixed(2)} V</div>`;
+                    explanation = `<div class=\"explanation\">Using V = I × R<br>V = ${current} A × ${resistance} Ω = ${calculatedV.toFixed(2)} V</div>`;
+                    const vInput = document.getElementById('voltage');
+                    if (vInput && (vInput.value === '' || isNaN(parseFloat(vInput.value)))) {
+                        vInput.value = calculatedV.toFixed(2);
+                    }
                 } else if (isNaN(current)) {
                     const calculatedI = voltage / resistance;
-                    result = `<div class="result">Current (I) = ${calculatedI.toFixed(2)} A</div>`;
-                    explanation = `<div class="explanation">Using I = V ÷ R<br>I = ${voltage} V ÷ ${resistance} Ω = ${calculatedI.toFixed(2)} A</div>`;
+                    result = `<div class=\"result\">Current (I) = ${calculatedI.toFixed(2)} A</div>`;
+                    explanation = `<div class=\"explanation\">Using I = V ÷ R<br>I = ${voltage} V ÷ ${resistance} Ω = ${calculatedI.toFixed(2)} A</div>`;
+                    const iInput = document.getElementById('current');
+                    if (iInput && (iInput.value === '' || isNaN(parseFloat(iInput.value)))) {
+                        iInput.value = calculatedI.toFixed(2);
+                    }
                 } else if (isNaN(resistance)) {
                     const calculatedR = voltage / current;
-                    result = `<div class="result">Resistance (R) = ${calculatedR.toFixed(2)} Ω</div>`;
-                    explanation = `<div class="explanation">Using R = V ÷ I<br>R = ${voltage} V ÷ ${current} A = ${calculatedR.toFixed(2)} Ω</div>`;
+                    result = `<div class=\"result\">Resistance (R) = ${calculatedR.toFixed(2)} Ω</div>`;
+                    explanation = `<div class=\"explanation\">Using R = V ÷ I<br>R = ${voltage} V ÷ ${current} A = ${calculatedR.toFixed(2)} Ω</div>`;
+                    const rInput = document.getElementById('resistance');
+                    if (rInput && (rInput.value === '' || isNaN(parseFloat(rInput.value)))) {
+                        rInput.value = calculatedR.toFixed(2);
+                    }
                 }
             }
 
@@ -467,32 +718,64 @@
 
             // Count how many values we have
             const values = [power, wattVoltage, wattCurrent].filter(v => !isNaN(v));
-            
+
+            // Clear previous error highlighting by default
+            ['power', 'wattVoltage', 'wattCurrent'].forEach(id => {
+                const el = document.getElementById(id);
+                if (el) el.classList.remove('input-error');
+            });
+
             if (values.length < 2) {
                 result = '<div class="result">Please enter at least 2 values to calculate the third.</div>';
             } else if (values.length === 3) {
                 // Verify the calculation
                 const calculatedP = wattVoltage * wattCurrent;
-                
+
                 if (Math.abs(power - calculatedP) < 0.01) {
                     result = '<div class="result">✓ Your values are correct! P = V × I</div>';
                 } else {
-                    result = '<div class="result">⚠️ Check your values - they don\'t match Watt\'s Law</div>';
+                    result = '<div class="result error">⚠️ Check your values - they don\'t match Watt\'s Law</div>';
+                    // Highlight the most likely incorrect field in red
+                    const dp = Math.abs(power - calculatedP);
+                    const dv = Math.abs(wattVoltage - (power / (wattCurrent || 1)));
+                    const di = Math.abs(wattCurrent - (power / (wattVoltage || 1)));
+                    const max = Math.max(dp, dv, di);
+                    const pEl = document.getElementById('power');
+                    const vEl = document.getElementById('wattVoltage');
+                    const iEl = document.getElementById('wattCurrent');
+                    if (max === dp && pEl) pEl.classList.add('input-error');
+                    else if (pEl) pEl.classList.remove('input-error');
+                    if (max === dv && vEl) vEl.classList.add('input-error');
+                    else if (vEl) vEl.classList.remove('input-error');
+                    if (max === di && iEl) iEl.classList.add('input-error');
+                    else if (iEl) iEl.classList.remove('input-error');
                 }
             } else {
-                // Calculate missing value
+                // Calculate missing value and populate the corresponding input field
                 if (isNaN(power)) {
                     const calculatedP = wattVoltage * wattCurrent;
-                    result = `<div class="result">Power (P) = ${calculatedP.toFixed(2)} W</div>`;
-                    explanation = `<div class="explanation">Using P = V × I<br>P = ${wattVoltage} V × ${wattCurrent} A = ${calculatedP.toFixed(2)} W</div>`;
+                    result = `<div class=\"result\">Power (P) = ${calculatedP.toFixed(2)} W</div>`;
+                    explanation = `<div class=\"explanation\">Using P = V × I<br>P = ${wattVoltage} V × ${wattCurrent} A = ${calculatedP.toFixed(2)} W</div>`;
+                    const pInput = document.getElementById('power');
+                    if (pInput && (pInput.value === '' || isNaN(parseFloat(pInput.value)))) {
+                        pInput.value = calculatedP.toFixed(2);
+                    }
                 } else if (isNaN(wattVoltage)) {
                     const calculatedV = power / wattCurrent;
-                    result = `<div class="result">Voltage (V) = ${calculatedV.toFixed(2)} V</div>`;
-                    explanation = `<div class="explanation">Using V = P ÷ I<br>V = ${power} W ÷ ${wattCurrent} A = ${calculatedV.toFixed(2)} V</div>`;
+                    result = `<div class=\"result\">Voltage (V) = ${calculatedV.toFixed(2)} V</div>`;
+                    explanation = `<div class=\"explanation\">Using V = P ÷ I<br>V = ${power} W ÷ ${wattCurrent} A = ${calculatedV.toFixed(2)} V</div>`;
+                    const vInput = document.getElementById('wattVoltage');
+                    if (vInput && (vInput.value === '' || isNaN(parseFloat(vInput.value)))) {
+                        vInput.value = calculatedV.toFixed(2);
+                    }
                 } else if (isNaN(wattCurrent)) {
                     const calculatedI = power / wattVoltage;
-                    result = `<div class="result">Current (I) = ${calculatedI.toFixed(2)} A</div>`;
-                    explanation = `<div class="explanation">Using I = P ÷ V<br>I = ${power} W ÷ ${wattVoltage} V = ${calculatedI.toFixed(2)} A</div>`;
+                    result = `<div class=\"result\">Current (I) = ${calculatedI.toFixed(2)} A</div>`;
+                    explanation = `<div class=\"explanation\">Using I = P ÷ V<br>I = ${power} W ÷ ${wattVoltage} V = ${calculatedI.toFixed(2)} A</div>`;
+                    const iInput = document.getElementById('wattCurrent');
+                    if (iInput && (iInput.value === '' || isNaN(parseFloat(iInput.value)))) {
+                        iInput.value = calculatedI.toFixed(2);
+                    }
                 }
             }
 
@@ -501,7 +784,7 @@
 
         // Auto-calculate on input change
         document.querySelectorAll('input').forEach(input => {
-            input.addEventListener('input', function() {
+            input.addEventListener('input', function () {
                 if (this.id.includes('watt') || this.id === 'power') {
                     calculateWatts();
                 } else {
@@ -509,6 +792,133 @@
                 }
             });
         });
+
+        // Numeric Picker Logic
+        const COMMON_VALUES = {
+            voltage: [12, 24, 48, 120, 208, 240, 277, 480, 600],
+            current: [0.5, 1, 5, 10, 15, 20, 30, 40, 50, 60, 100, 200, 400],
+            resistance: [0.1, 1, 5, 10, 50, 100, 500, 1000, 5000, 10000, 100000, 1000000],
+            power: [10, 25, 50, 75, 100, 250, 500, 750, 1000, 1500, 2000, 3000, 5000, 10000]
+        };
+
+        const inputIdToType = (id) => {
+            if (id === 'voltage' || id === 'wattVoltage') return 'voltage';
+            if (id === 'current' || id === 'wattCurrent') return 'current';
+            if (id === 'resistance') return 'resistance';
+            if (id === 'power') return 'power';
+            return 'voltage';
+        };
+
+        let activeInput = null;
+        const overlay = document.getElementById('pickerOverlay');
+        const pickerList = document.getElementById('pickerList');
+        const pickerDisplay = document.getElementById('pickerDisplay');
+        const pickerTitle = document.getElementById('pickerTitle');
+
+        function openPickerForInput(input) {
+            activeInput = input;
+            pickerDisplay.textContent = input.value || '';
+            const type = inputIdToType(input.id);
+            pickerTitle.textContent = `Select ${type.charAt(0).toUpperCase() + type.slice(1)}`;
+            renderCommonList(type);
+            overlay.style.display = 'flex';
+        }
+
+        function closePicker() {
+            overlay.style.display = 'none';
+            activeInput = null;
+        }
+
+        function renderCommonList(type) {
+            pickerList.innerHTML = '';
+            const values = COMMON_VALUES[type] || [];
+            values.forEach(v => {
+                const btn = document.createElement('button');
+                btn.textContent = formatValue(type, v);
+                btn.addEventListener('click', () => {
+                    // Immediate apply on tap
+                    if (!activeInput) return;
+                    activeInput.value = String(v);
+                    if (activeInput.id.includes('watt') || activeInput.id === 'power') {
+                        calculateWatts();
+                    } else {
+                        calculateOhms();
+                    }
+                    closePicker();
+                });
+                pickerList.appendChild(btn);
+            });
+        }
+
+        function formatValue(type, v) {
+            switch (type) {
+                case 'voltage': return `${v} V`;
+                case 'current': return `${v} A`;
+                case 'resistance':
+                    if (v >= 1000000) return `${v / 1000000} MΩ`;
+                    if (v >= 1000) return `${v / 1000} kΩ`;
+                    return `${v} Ω`;
+                case 'power': return `${v} W`;
+                default: return String(v);
+            }
+        }
+
+        // Wire inputs to open picker on focus/click
+        ['voltage', 'current', 'resistance', 'power', 'wattVoltage', 'wattCurrent'].forEach(id => {
+            const el = document.getElementById(id);
+            if (el) {
+                el.addEventListener('focus', (e) => {
+                    e.preventDefault();
+                    el.blur();
+                    openPickerForInput(el);
+                });
+                el.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    openPickerForInput(el);
+                });
+            }
+        });
+
+        // Keypad handlers
+        document.querySelectorAll('.key-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const action = btn.dataset.action;
+                let text = pickerDisplay.textContent || '';
+                if (action === 'back') {
+                    pickerDisplay.textContent = text.slice(0, -1);
+                    return;
+                }
+                if (action === 'clear') {
+                    pickerDisplay.textContent = '';
+                    return;
+                }
+                const ch = btn.textContent.trim();
+                if (ch === '.' && text.includes('.')) return;
+                pickerDisplay.textContent = text + ch;
+            });
+        });
+
+        // Apply/Cancel/Close
+        document.getElementById('pickerApply').addEventListener('click', () => {
+            if (!activeInput) return;
+            const raw = pickerDisplay.textContent.trim();
+            const value = parseFloat(raw);
+            if (!isNaN(value)) {
+                activeInput.value = value;
+                if (activeInput.id.includes('watt') || activeInput.id === 'power') {
+                    calculateWatts();
+                } else {
+                    calculateOhms();
+                }
+            }
+            closePicker();
+        });
+        document.getElementById('pickerCancel').addEventListener('click', closePicker);
+        document.getElementById('pickerClose').addEventListener('click', closePicker);
+        overlay.addEventListener('click', (e) => {
+            if (e.target === overlay) closePicker();
+        });
     </script>
 </body>
+
 </html>
