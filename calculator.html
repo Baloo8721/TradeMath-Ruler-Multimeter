@@ -3,13 +3,25 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Electrical Trades Calculator</title>
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
+        }
+
+        html,
+        body {
+            -webkit-text-size-adjust: 100%;
+            touch-action: manipulation;
+        }
+
+        a,
+        button,
+        input {
+            touch-action: manipulation;
         }
 
         body {
@@ -509,7 +521,6 @@
                     </div>
                 </div>
 
-                <button class="calculate-btn" onclick="calculateOhms()">Calculate Missing Value</button>
                 <button class="clear-btn" onclick="clearOhms()">Clear</button>
                 <div id="ohmsResult"></div>
             </div>
@@ -541,7 +552,6 @@
                     </div>
                 </div>
 
-                <button class="calculate-btn" onclick="calculateWatts()">Calculate Missing Value</button>
                 <button class="clear-btn" onclick="clearWatts()">Clear</button>
                 <div id="wattsResult"></div>
             </div>
@@ -780,6 +790,55 @@
             }
 
             document.getElementById('wattsResult').innerHTML = result + explanation;
+        }
+
+        // Clear functions
+        function clearOhms() {
+            // Clear inputs
+            ['voltage', 'current', 'resistance'].forEach(id => {
+                const el = document.getElementById(id);
+                if (el) {
+                    el.value = '';
+                    el.classList.remove('input-error');
+                }
+            });
+
+            // Clear result
+            const res = document.getElementById('ohmsResult');
+            if (res) res.innerHTML = '';
+
+            // Remove highlights
+            document.querySelectorAll('#ohmsTriangle .triangle-section').forEach(section => {
+                section.classList.remove('highlight');
+            });
+
+            // Close numeric picker if open
+            const overlayEl = document.getElementById('pickerOverlay');
+            if (overlayEl) overlayEl.style.display = 'none';
+        }
+
+        function clearWatts() {
+            // Clear inputs
+            ['power', 'wattVoltage', 'wattCurrent'].forEach(id => {
+                const el = document.getElementById(id);
+                if (el) {
+                    el.value = '';
+                    el.classList.remove('input-error');
+                }
+            });
+
+            // Clear result
+            const res = document.getElementById('wattsResult');
+            if (res) res.innerHTML = '';
+
+            // Remove highlights
+            document.querySelectorAll('#wattsTriangle .triangle-section').forEach(section => {
+                section.classList.remove('highlight');
+            });
+
+            // Close numeric picker if open
+            const overlayEl = document.getElementById('pickerOverlay');
+            if (overlayEl) overlayEl.style.display = 'none';
         }
 
         // Auto-calculate on input change

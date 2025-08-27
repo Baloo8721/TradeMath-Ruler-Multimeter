@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Measuring Tape Simulator</title>
     <style>
         .quiz-btn {
@@ -29,6 +29,20 @@
             margin: 0;
             padding: 0;
             box-sizing: border-box;
+        }
+
+        html,
+        body {
+            -webkit-text-size-adjust: 100%;
+            touch-action: manipulation;
+        }
+
+        button,
+        .lesson-btn,
+        .color-btn,
+        .btn,
+        a {
+            touch-action: manipulation;
         }
 
         body {
@@ -262,6 +276,10 @@
             height: 35px;
         }
 
+        .mark.sixteenth {
+            height: 20px;
+        }
+
         .number {
             position: absolute;
             font-size: 14px;
@@ -297,6 +315,11 @@
         .fraction-label.sixteenth {
             font-size: 10px;
             top: 55px;
+        }
+
+        .fraction-label.sixteenth {
+            top: -15px;
+            font-size: 7px;
         }
 
         .fraction-label.top {
@@ -1077,7 +1100,8 @@
                     style="display: flex; flex-direction: column; align-items: center; gap: 12px; margin-top: 15px;">
                     <div class="quiz-controls" id="quiz-controls" style="display: none;">
                         <div class="quiz-input-wrapper" style="margin-right: 15px;">
-                            <input type="text" class="quiz-input" id="quiz-input" placeholder="Enter measurement">
+                            <input type="text" class="quiz-input" id="quiz-input" placeholder="Enter measurement"
+                                readonly>
                             <div class="quiz-input-trigger" id="quiz-input-trigger" style="display: none;">Enter</div>
                         </div>
                         <button class="btn" onclick="checkAnswer()">Check</button>
@@ -1204,6 +1228,14 @@
             }
         }
 
+        // Toggle visibility of sixteenth fraction labels based on quiz mode
+        function toggleSixteenthMarks(show) {
+            const sixteenthLabels = document.querySelectorAll('.fraction-label.sixteenth');
+            sixteenthLabels.forEach(label => {
+                label.style.display = show ? 'block' : 'none';
+            });
+        }
+
         function initializeTape() {
             const marksContainer = document.getElementById('tape-marks');
             marksContainer.innerHTML = '';
@@ -1243,6 +1275,12 @@
                                 divisionPosition,
                                 'eighth'
                             );
+                        }
+
+                        // Always create sixteenth marks and labels for all divisions 1-15
+                        if (division >= 1 && division <= 15) {
+                            createMark('sixteenth', divisionPosition);
+                            createFractionLabel(`${division}`, divisionPosition, 'sixteenth');
                         }
                     }
                 }
@@ -1391,6 +1429,9 @@
                 document.getElementById('quiz-progress-row').style.display = 'flex';
                 document.getElementById('score').style.display = 'block';
 
+                // Hide sixteenth marks in quiz mode
+                toggleSixteenthMarks(false);
+
                 // Initialize quiz state
                 quizActive = true;
                 quizAnswers = [];
@@ -1408,6 +1449,9 @@
                 document.getElementById('quiz-question').style.display = 'none';
                 document.getElementById('quiz-progress-row').style.display = 'none';
                 document.getElementById('score').style.display = 'none';
+
+                // Show sixteenth marks when exiting quiz mode
+                toggleSixteenthMarks(true);
 
                 // Reset quiz state
                 quizActive = false;
@@ -1860,6 +1904,10 @@
             if (defaultLessonBtn) {
                 defaultLessonBtn.classList.add('active');
             }
+
+            // Show sixteenth marks by default
+            toggleSixteenthMarks(true);
+
             generateRandomMeasurement();
 
             // Initialize number picker
