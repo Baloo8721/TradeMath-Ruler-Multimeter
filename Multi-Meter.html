@@ -164,9 +164,10 @@
         }
         .test-point {
             cursor: pointer;
-            transition: opacity 0.15s;
+            transition: opacity 0.2s;
+            pointer-events: visible;
         }
-        .test-point:hover { opacity: 0.7; }
+        .test-point:hover { opacity: 0.9 !important; }
         .test-point.active-ring { animation: pulse-ring 1s infinite; }
         @keyframes pulse-ring {
             0%, 100% { opacity: 0.6; }
@@ -341,13 +342,13 @@ const SCENARIOS = [
 
             <!-- Test points (clickable) -->
             <!-- Left outlet -->
-            <circle cx="154" cy="100" r="14" class="test-point" data-tp="neutral" fill="transparent" stroke="#4ade80" stroke-width="2" opacity="0"/>
-            <circle cx="154" cy="125" r="14" class="test-point" data-tp="hot" fill="transparent" stroke="#f59e0b" stroke-width="2" opacity="0"/>
-            <circle cx="154" cy="142" r="14" class="test-point" data-tp="ground" fill="transparent" stroke="#60a5fa" stroke-width="2" opacity="0"/>
+            <circle cx="154" cy="100" r="14" class="test-point" data-tp="neutral" fill="transparent" stroke="#4ade80" stroke-width="2" opacity="0.55"/>
+            <circle cx="154" cy="125" r="14" class="test-point" data-tp="hot" fill="transparent" stroke="#f59e0b" stroke-width="2" opacity="0.55"/>
+            <circle cx="154" cy="142" r="14" class="test-point" data-tp="ground" fill="transparent" stroke="#60a5fa" stroke-width="2" opacity="0.55"/>
             <!-- Right outlet -->
-            <circle cx="224" cy="100" r="14" class="test-point" data-tp="neutral2" fill="transparent" stroke="#4ade80" stroke-width="2" opacity="0"/>
-            <circle cx="224" cy="125" r="14" class="test-point" data-tp="hot2" fill="transparent" stroke="#f59e0b" stroke-width="2" opacity="0"/>
-            <circle cx="224" cy="142" r="14" class="test-point" data-tp="ground2" fill="transparent" stroke="#60a5fa" stroke-width="2" opacity="0"/>
+            <circle cx="224" cy="100" r="14" class="test-point" data-tp="neutral2" fill="transparent" stroke="#4ade80" stroke-width="2" opacity="0.55"/>
+            <circle cx="224" cy="125" r="14" class="test-point" data-tp="hot2" fill="transparent" stroke="#f59e0b" stroke-width="2" opacity="0.55"/>
+            <circle cx="224" cy="142" r="14" class="test-point" data-tp="ground2" fill="transparent" stroke="#60a5fa" stroke-width="2" opacity="0.55"/>
 
             <!-- Labels -->
             <text x="154" y="170" fill="#888" font-size="9" text-anchor="middle" font-family="Arial,sans-serif">N  H  G</text>
@@ -395,10 +396,10 @@ const SCENARIOS = [
             <circle cx="192" cy="155" r="9" fill="#333" stroke="#555" stroke-width="1"/>
             <text x="192" y="158" fill="#fff" font-size="7" text-anchor="middle">G</text>
 
-            <circle cx="165" cy="102" r="16" class="test-point" data-tp="l1" fill="transparent" stroke="#f59e0b" stroke-width="2" opacity="0"/>
-            <circle cx="192" cy="102" r="16" class="test-point" data-tp="neutral" fill="transparent" stroke="#4ade80" stroke-width="2" opacity="0"/>
-            <circle cx="219" cy="102" r="16" class="test-point" data-tp="l2" fill="transparent" stroke="#f59e0b" stroke-width="2" opacity="0"/>
-            <circle cx="192" cy="155" r="16" class="test-point" data-tp="ground" fill="transparent" stroke="#60a5fa" stroke-width="2" opacity="0"/>
+            <circle cx="165" cy="102" r="16" class="test-point" data-tp="l1" fill="transparent" stroke="#f59e0b" stroke-width="2" opacity="0.55"/>
+            <circle cx="192" cy="102" r="16" class="test-point" data-tp="neutral" fill="transparent" stroke="#4ade80" stroke-width="2" opacity="0.55"/>
+            <circle cx="219" cy="102" r="16" class="test-point" data-tp="l2" fill="transparent" stroke="#f59e0b" stroke-width="2" opacity="0.55"/>
+            <circle cx="192" cy="155" r="16" class="test-point" data-tp="ground" fill="transparent" stroke="#60a5fa" stroke-width="2" opacity="0.55"/>
 
             <text x="165" y="175" fill="#888" font-size="8" text-anchor="middle" font-family="Arial,sans-serif">L1</text>
             <text x="192" y="175" fill="#888" font-size="8" text-anchor="middle" font-family="Arial,sans-serif">N</text>
@@ -441,8 +442,8 @@ const SCENARIOS = [
             <rect x="130" y="162" width="70" height="16" rx="2" fill="#222" stroke="#444" stroke-width="0.5"/>
             <rect x="200" y="162" width="70" height="16" rx="2" fill="#222" stroke="#444" stroke-width="0.5"/>
 
-            <circle cx="140" cy="51" r="18" class="test-point" data-tp="pos" fill="transparent" stroke="#f59e0b" stroke-width="2" opacity="0"/>
-            <circle cx="260" cy="51" r="18" class="test-point" data-tp="neg" fill="transparent" stroke="#4ade80" stroke-width="2" opacity="0"/>
+            <circle cx="140" cy="51" r="18" class="test-point" data-tp="pos" fill="transparent" stroke="#f59e0b" stroke-width="2" opacity="0.55"/>
+            <circle cx="260" cy="51" r="18" class="test-point" data-tp="neg" fill="transparent" stroke="#4ade80" stroke-width="2" opacity="0.55"/>
             <text x="140" y="78" fill="#f44" font-size="9" text-anchor="middle" font-weight="700">POS +</text>
             <text x="260" y="78" fill="#888" font-size="9" text-anchor="middle">NEG -</text>
         `,
@@ -474,8 +475,8 @@ const SCENARIOS = [
             <!-- Rating -->
             <text x="200" y="150" fill="#b45309" font-size="12" text-anchor="middle" font-weight="700">30A</text>
 
-            <circle cx="120" cy="136" r="16" class="test-point" data-tp="end1" fill="transparent" stroke="#4ade80" stroke-width="2" opacity="0"/>
-            <circle cx="280" cy="136" r="16" class="test-point" data-tp="end2" fill="transparent" stroke="#4ade80" stroke-width="2" opacity="0"/>
+            <circle cx="120" cy="136" r="16" class="test-point" data-tp="end1" fill="transparent" stroke="#4ade80" stroke-width="2" opacity="0.55"/>
+            <circle cx="280" cy="136" r="16" class="test-point" data-tp="end2" fill="transparent" stroke="#4ade80" stroke-width="2" opacity="0.55"/>
             <text x="120" y="170" fill="#888" font-size="9" text-anchor="middle">End 1</text>
             <text x="280" y="170" fill="#888" font-size="9" text-anchor="middle">End 2</text>
         `,
@@ -510,8 +511,8 @@ const SCENARIOS = [
             <text x="200" y="140" fill="#b91c1c" font-size="7" text-anchor="middle" font-family="Arial,sans-serif">BROKEN</text>
             <text x="200" y="150" fill="#b91c1c" font-size="12" text-anchor="middle" font-weight="700">30A</text>
 
-            <circle cx="120" cy="136" r="16" class="test-point" data-tp="end1" fill="transparent" stroke="#f87171" stroke-width="2" opacity="0"/>
-            <circle cx="280" cy="136" r="16" class="test-point" data-tp="end2" fill="transparent" stroke="#f87171" stroke-width="2" opacity="0"/>
+            <circle cx="120" cy="136" r="16" class="test-point" data-tp="end1" fill="transparent" stroke="#f87171" stroke-width="2" opacity="0.55"/>
+            <circle cx="280" cy="136" r="16" class="test-point" data-tp="end2" fill="transparent" stroke="#f87171" stroke-width="2" opacity="0.55"/>
             <text x="120" y="170" fill="#888" font-size="9" text-anchor="middle">End 1</text>
             <text x="280" y="170" fill="#888" font-size="9" text-anchor="middle">End 2</text>
         `,
@@ -544,8 +545,8 @@ const SCENARIOS = [
             <text x="142" y="76" fill="#aaa" font-size="9" text-anchor="middle">T1</text>
             <text x="258" y="76" fill="#aaa" font-size="9" text-anchor="middle">T2</text>
 
-            <circle cx="142" cy="89" r="16" class="test-point" data-tp="t1" fill="transparent" stroke="#f59e0b" stroke-width="2" opacity="0"/>
-            <circle cx="258" cy="89" r="16" class="test-point" data-tp="t2" fill="transparent" stroke="#f59e0b" stroke-width="2" opacity="0"/>
+            <circle cx="142" cy="89" r="16" class="test-point" data-tp="t1" fill="transparent" stroke="#f59e0b" stroke-width="2" opacity="0.55"/>
+            <circle cx="258" cy="89" r="16" class="test-point" data-tp="t2" fill="transparent" stroke="#f59e0b" stroke-width="2" opacity="0.55"/>
 
             <text x="142" y="195" fill="#888" font-size="9" text-anchor="middle">Terminal 1</text>
             <text x="258" y="195" fill="#888" font-size="9" text-anchor="middle">Terminal 2</text>
@@ -806,12 +807,8 @@ class Multimeter {
     }
 
     renderBenchSvg(s) {
-        // Parse scenario SVG and inject click handlers on test-points
-        const wrap = document.createElement("div");
-        wrap.style.cssText = "width:100%;height:100%;display:flex;justify-content:center;align-items:center;";
-        wrap.innerHTML = s.svg;
-        // Bind test point clicks
-        wrap.querySelectorAll(".test-point").forEach(el => {
+        this.benchSvg.innerHTML = `<svg viewBox="0 0 400 280" style="max-width:100%;height:auto;">${s.svg}</svg>`;
+        this.benchSvg.querySelectorAll(".test-point").forEach(el => {
             el.style.cursor = "pointer";
             el.addEventListener("click", (e) => {
                 const tp = el.getAttribute("data-tp");
@@ -821,8 +818,6 @@ class Multimeter {
                 e.stopPropagation();
             });
         });
-        this.benchSvg.innerHTML = "";
-        this.benchSvg.appendChild(wrap);
 
         // Reset probe lines
         this.probeLineRed.setAttribute("opacity", "0");
