@@ -10,7 +10,7 @@
             --meter-body: #1a1a1a;
             --meter-screen: #c8d8c8;
             --meter-text: #2a2a2a;
-            --bg: #1a1a1a;
+            --bg: #111;
         }
         @font-face {
             font-family: 'Digital';
@@ -18,456 +18,569 @@
         }
         * { box-sizing: border-box; }
         body {
-            font-family: 'Arial', sans-serif;
+            font-family: Arial, sans-serif;
             display: flex;
             justify-content: center;
-            align-items: center;
             min-height: 100vh;
             margin: 0;
             background: var(--bg);
             color: #fff;
             padding: 10px;
         }
-        .container {
+        .app {
             display: flex;
             flex-direction: column;
-            max-width: 820px;
+            max-width: 960px;
             width: 100%;
+            gap: 12px;
+            padding: 8px 0;
+        }
+        .top-row {
+            display: flex;
             gap: 16px;
-            align-items: center;
+            align-items: flex-start;
         }
         .meter {
-            width: 100%;
-            max-width: 420px;
+            width: 380px;
+            flex-shrink: 0;
             background: var(--meter-red);
-            border-radius: 24px 24px 48px 48px;
-            padding: 20px 16px 32px;
+            border-radius: 20px 20px 40px 40px;
+            padding: 16px 14px 24px;
             position: relative;
         }
         .clamp-head {
-            width: 140px;
-            height: 60px;
+            width: 120px; height: 50px;
             background: var(--meter-red);
-            margin: 0 auto 10px;
-            border-radius: 70px 70px 0 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
+            margin: 0 auto 8px;
+            border-radius: 60px 60px 0 0;
+            display: flex; justify-content: center; align-items: center;
             border-bottom: 3px solid rgba(0,0,0,0.2);
         }
-        .clamp-gap {
-            width: 50px;
-            height: 30px;
-            background: var(--meter-body);
-            border-radius: 0 0 25px 25px;
-        }
+        .clamp-gap { width: 44px; height: 24px; background: var(--meter-body); border-radius: 0 0 22px 22px; }
         .screen {
-            width: 100%;
-            height: 130px;
+            width: 100%; height: 110px;
             background: var(--meter-screen);
-            border-radius: 8px;
-            padding: 8px 12px;
-            display: flex;
-            flex-direction: column;
+            border-radius: 6px;
+            padding: 6px 10px;
+            display: flex; flex-direction: column;
             font-family: 'Digital', monospace;
             position: relative;
-            overflow: hidden;
         }
         .screen-indicators {
-            display: flex;
-            justify-content: space-between;
-            font-size: 0.75em;
-            color: var(--meter-text);
-            font-family: Arial, sans-serif;
-            min-height: 16px;
+            display: flex; justify-content: space-between;
+            font-size: 0.7em; color: var(--meter-text);
+            font-family: Arial, sans-serif; min-height: 14px;
         }
         .screen-indicators .hold { opacity: 0.4; }
         .screen-indicators .hold.active { opacity: 1; font-weight: 700; color: #c00; }
         .screen-indicators .rel { opacity: 0.4; }
         .screen-indicators .rel.active { opacity: 1; font-weight: 700; color: #c00; }
-        .screen-indicators .auto { opacity: 0.7; }
-        .screen-indicators .bar { flex: 1; }
         .screen-value {
-            font-size: 3.2em;
-            color: var(--meter-text);
-            text-align: right;
-            line-height: 1.1;
-            flex: 1;
-            display: flex;
-            align-items: center;
-            justify-content: flex-end;
+            font-size: 3em; color: var(--meter-text);
+            text-align: right; line-height: 1; flex: 1;
+            display: flex; align-items: center; justify-content: flex-end;
             letter-spacing: 2px;
         }
-        .screen-unit {
-            font-size: 1em;
-            color: #555;
-            text-align: right;
-            font-family: Arial, sans-serif;
-        }
-        .screen-extra {
-            font-size: 0.6em;
-            color: #555;
-            text-align: left;
-            font-family: Arial, sans-serif;
-            min-height: 14px;
-        }
-        .dial-section {
-            position: relative;
-            width: 280px;
-            height: 280px;
-            margin: 10px auto;
-        }
-        .dial-ring {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-        }
+        .screen-unit { font-size: 0.9em; color: #555; text-align: right; font-family: Arial, sans-serif; min-height: 16px; }
+        .screen-extra { font-size: 0.55em; color: #555; text-align: left; font-family: Arial, sans-serif; min-height: 12px; }
+        .dial-section { position: relative; width: 240px; height: 240px; margin: 6px auto; }
+        .dial-ring { position: absolute; width: 100%; height: 100%; pointer-events: none; }
         .dial {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            background: #222;
-            border-radius: 50%;
-            transition: transform 0.25s ease;
+            position: absolute; width: 100%; height: 100%;
+            background: #222; border-radius: 50%;
+            transition: transform 0.2s ease;
             cursor: pointer;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.4), inset 0 -3px 8px rgba(0,0,0,0.3);
+            box-shadow: 0 4px 16px rgba(0,0,0,0.4), inset 0 -2px 6px rgba(0,0,0,0.3);
         }
         .dial-selector {
-            position: absolute;
-            top: -6px;
-            left: 50%;
-            width: 5px;
-            height: 28px;
-            background: #ff4444;
-            transform: translateX(-50%);
-            border-radius: 3px;
+            position: absolute; top: -5px; left: 50%; width: 4px; height: 22px;
+            background: #ff4444; transform: translateX(-50%); border-radius: 2px;
             box-shadow: 0 0 6px rgba(255,68,68,0.6);
         }
         .dial-marker {
-            position: absolute;
-            left: 50%;
-            top: 50%;
-            transform-origin: center;
-            pointer-events: none;
-            font-size: 11px;
-            color: #ccc;
-            text-align: center;
-            width: 50px;
-            margin-left: -25px;
-            margin-top: -8px;
+            position: absolute; left: 50%; top: 50%;
+            transform-origin: center; pointer-events: none;
+            font-size: 10px; color: #ccc; text-align: center;
+            width: 40px; margin-left: -20px; margin-top: -7px;
         }
         .ports {
-            display: flex;
-            justify-content: space-around;
-            margin-top: 16px;
-            background: var(--meter-body);
-            padding: 12px 10px;
-            border-radius: 12px;
-            gap: 8px;
+            display: flex; justify-content: space-around;
+            margin-top: 10px; background: var(--meter-body);
+            padding: 8px 6px; border-radius: 10px; gap: 6px;
         }
-        .port-group {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 4px;
-        }
+        .port-group { display: flex; flex-direction: column; align-items: center; gap: 2px; }
         .port {
-            width: 36px;
-            height: 36px;
-            border-radius: 50%;
-            position: relative;
-            cursor: pointer;
-            transition: all 0.2s;
+            width: 30px; height: 30px; border-radius: 50%;
+            position: relative; cursor: pointer; transition: all 0.2s;
             border: 2px solid transparent;
         }
         .port.black { background: #222; border-color: #555; }
         .port.red { background: #cc2929; border-color: #ff6666; }
         .port.yellow { background: #ccaa00; border-color: #ffdd44; }
-        .port-label { font-size: 0.65em; color: #ccc; text-align: center; }
-        .port.connected { box-shadow: 0 0 10px rgba(255,255,255,0.3); }
+        .port-label { font-size: 0.55em; color: #ccc; text-align: center; }
+        .port.connected { box-shadow: 0 0 8px rgba(255,255,255,0.3); }
         .port.connected.black { border-color: #fff; }
         .port.connected.red { border-color: #fff; }
         .port.connected.yellow { border-color: #fff; }
-        .controls {
-            display: flex;
-            justify-content: center;
-            gap: 8px;
-            margin-top: 14px;
-        }
+        .controls { display: flex; justify-content: center; gap: 6px; margin-top: 10px; }
         .btn {
-            padding: 8px 18px;
-            background: var(--meter-body);
-            color: #fff;
-            border: 1px solid #444;
-            border-radius: 6px;
-            cursor: pointer;
-            font-size: 0.8em;
-            font-weight: 600;
+            padding: 6px 14px; background: var(--meter-body);
+            color: #fff; border: 1px solid #444; border-radius: 5px;
+            cursor: pointer; font-size: 0.75em; font-weight: 600;
             transition: all 0.15s;
         }
         .btn:active { background: #333; transform: scale(0.96); }
         .btn.active { background: #444; border-color: #888; }
 
-        /* Probe wires */
-        .probe-area {
-            position: relative;
-            height: 10px;
-            margin-top: 4px;
-        }
-        .probe-line {
-            position: absolute;
-            bottom: 0;
-            height: 3px;
-            border-radius: 2px;
-            transition: width 0.3s, opacity 0.3s;
-        }
-        .probe-line.red { background: #ff4444; right: 20%; }
-        .probe-line.black { background: #888; left: 20%; }
-
-        /* Scenario / help panel */
-        .panel {
-            width: 100%;
-            background: rgba(255,255,255,0.08);
-            border-radius: 12px;
-            padding: 16px;
-            max-height: 480px;
-            overflow-y: auto;
-        }
-        .panel h2 { color: #00ffff; margin: 0 0 12px; font-size: 1.1em; border-bottom: 1px solid rgba(0,255,255,0.3); padding-bottom: 8px; }
-        .panel h3 { color: #88ffff; margin: 10px 0 6px; font-size: 0.95em; }
-        .panel p { margin: 4px 0; font-size: 0.85em; line-height: 1.4; }
-        .panel ol { margin: 4px 0; padding-left: 20px; }
-        .panel li { margin: 3px 0; font-size: 0.85em; }
-        .panel .warning { background: rgba(255,0,0,0.15); border-left: 3px solid #f00; padding: 8px 10px; margin: 8px 0; border-radius: 0 6px 6px 0; }
-        .panel .success { background: rgba(0,200,0,0.15); border-left: 3px solid #0c0; padding: 8px 10px; margin: 8px 0; border-radius: 0 6px 6px 0; }
-
-        .scenario-btns {
+        /* Test bench */
+        .test-bench {
+            flex: 1;
+            background: rgba(255,255,255,0.06);
+            border-radius: 14px;
+            padding: 14px;
+            min-height: 400px;
             display: flex;
-            flex-wrap: wrap;
-            gap: 6px;
-            margin: 8px 0;
+            flex-direction: column;
+            position: relative;
+            overflow: hidden;
         }
-        .scenario-btns button {
-            padding: 6px 12px;
-            border: 1px solid #00ffff;
-            background: transparent;
-            color: #00ffff;
-            border-radius: 6px;
-            cursor: pointer;
-            font-size: 0.8em;
-            font-weight: 600;
-            transition: all 0.15s;
+        .bench-header {
+            display: flex; justify-content: space-between; align-items: center;
+            margin-bottom: 8px; flex-wrap: wrap; gap: 6px;
         }
-        .scenario-btns button:active { background: rgba(0,255,255,0.2); }
-        .scenario-btns button.active { background: rgba(0,255,255,0.2); border-color: #fff; color: #fff; }
+        .bench-header h2 { margin: 0; font-size: 1em; color: #00ffff; }
+        .bench-scenario-label { font-size: 0.8em; color: #88ffff; }
+        .bench-scenario-label span { color: #fff; font-weight: 700; }
 
-        @media (max-width: 460px) {
-            .dial-section { width: 240px; height: 240px; }
-            .screen-value { font-size: 2.6em; }
-            .screen { height: 110px; }
-            .meter { padding: 14px 12px 24px; }
-            .dial-marker { font-size: 9px; width: 40px; margin-left: -20px; }
+        .bench-svg-wrap {
+            flex: 1;
+            display: flex; justify-content: center; align-items: center;
+            position: relative;
+            min-height: 240px;
+        }
+        .bench-svg-wrap svg {
+            max-width: 100%;
+            max-height: 100%;
+        }
+        .test-point {
+            cursor: pointer;
+            transition: opacity 0.15s;
+        }
+        .test-point:hover { opacity: 0.7; }
+        .test-point.active-ring { animation: pulse-ring 1s infinite; }
+        @keyframes pulse-ring {
+            0%, 100% { opacity: 0.6; }
+            50% { opacity: 1; }
+        }
+        .test-point.active { fill: #ff0; stroke: #ff0; }
+        .test-point-label {
+            font-size: 11px;
+            fill: #aaa;
+            text-anchor: middle;
+            pointer-events: none;
+        }
+
+        /* Probe wire SVG overlay */
+        .probe-overlay {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            pointer-events: none;
+            z-index: 5;
+        }
+
+        /* Status / help */
+        .bench-status {
+            margin-top: 6px;
+            padding: 6px 10px;
+            border-radius: 6px;
+            font-size: 0.8em;
+            min-height: 28px;
+        }
+        .bench-status.ok { background: rgba(0,200,0,0.15); border-left: 3px solid #0c0; }
+        .bench-status.warn { background: rgba(255,200,0,0.15); border-left: 3px solid #fc0; }
+        .bench-status.info { background: rgba(0,200,255,0.15); border-left: 3px solid #0cf; }
+
+        .scenario-bar {
+            display: flex; flex-wrap: wrap; gap: 4px; margin-bottom: 6px;
+        }
+        .scenario-bar button {
+            padding: 4px 10px; border: 1px solid #00ffff;
+            background: transparent; color: #00ffff;
+            border-radius: 4px; cursor: pointer;
+            font-size: 0.7em; font-weight: 600; transition: all 0.15s;
+        }
+        .scenario-bar button:active { background: rgba(0,255,255,0.2); }
+        .scenario-bar button.active { background: rgba(0,255,255,0.2); border-color: #fff; color: #fff; }
+
+        .help-panel {
+            background: rgba(255,255,255,0.04);
+            border-radius: 10px;
+            padding: 10px 14px;
+            font-size: 0.8em;
+            line-height: 1.4;
+        }
+        .help-panel h3 { margin: 0 0 4px; font-size: 0.9em; color: #88ffff; }
+        .help-panel p { margin: 2px 0; }
+        .help-panel ol { margin: 2px 0; padding-left: 16px; }
+        .help-panel li { margin: 1px 0; }
+        .help-panel .warn { background: rgba(255,0,0,0.12); border-left: 3px solid #f00; padding: 4px 8px; border-radius: 0 4px 4px 0; margin: 4px 0; }
+
+        @media (max-width: 720px) {
+            .top-row { flex-direction: column; align-items: center; }
+            .meter { width: 100%; max-width: 380px; }
+            .test-bench { width: 100%; min-height: 300px; }
+            .dial-section { width: 200px; height: 200px; }
+            .dial-marker { font-size: 9px; width: 34px; margin-left: -17px; }
+            .screen-value { font-size: 2.4em; }
+            .screen { height: 90px; }
         }
     </style>
 </head>
 <body>
-<div class="container">
-    <div class="meter">
-        <div class="clamp-head">
-            <div class="clamp-gap"></div>
-        </div>
-
-        <div class="screen">
-            <div class="screen-indicators">
-                <span class="mode" id="modeLabel">---</span>
-                <span class="bar"></span>
-                <span class="auto" id="autoLabel">AUTO</span>
-                <span class="hold" id="holdLabel">HOLD</span>
-                <span class="rel" id="relLabel">REL</span>
+<div class="app">
+    <div class="top-row">
+        <!-- MULTIMETER -->
+        <div class="meter">
+            <div class="clamp-head"><div class="clamp-gap"></div></div>
+            <div class="screen">
+                <div class="screen-indicators">
+                    <span class="mode" id="modeLabel">---</span>
+                    <span class="bar"></span>
+                    <span class="auto" id="autoLabel">AUTO</span>
+                    <span class="hold" id="holdLabel">HOLD</span>
+                    <span class="rel" id="relLabel">REL</span>
+                </div>
+                <div class="screen-value" id="screenValue">---</div>
+                <div class="screen-unit" id="screenUnit"></div>
+                <div class="screen-extra" id="screenExtra"></div>
             </div>
-            <div class="screen-value" id="screenValue">---</div>
-            <div class="screen-unit" id="screenUnit"></div>
-            <div class="screen-extra" id="screenExtra"></div>
-        </div>
-
-        <div class="dial-section">
-            <div class="dial" id="dial">
-                <div class="dial-selector"></div>
+            <div class="dial-section">
+                <div class="dial" id="dial"><div class="dial-selector"></div></div>
+                <div class="dial-ring" id="dialRing"></div>
             </div>
-            <div class="dial-ring" id="dialRing"></div>
-        </div>
-
-        <div class="probe-area">
-            <div class="probe-line black" id="probeBlack" style="width:0;opacity:0;"></div>
-            <div class="probe-line red" id="probeRed" style="width:0;opacity:0;"></div>
-        </div>
-
-        <div class="ports">
-            <div class="port-group">
-                <div class="port black" id="portCom"></div>
-                <div class="port-label">COM</div>
+            <div class="ports">
+                <div class="port-group"><div class="port black" id="portCom"></div><div class="port-label">COM</div></div>
+                <div class="port-group"><div class="port red" id="portVohm"></div><div class="port-label">VΩ</div></div>
+                <div class="port-group"><div class="port red" id="port10a"></div><div class="port-label">10A</div></div>
+                <div class="port-group"><div class="port yellow" id="portTemp"></div><div class="port-label">TEMP</div></div>
             </div>
-            <div class="port-group">
-                <div class="port red" id="portVohm"></div>
-                <div class="port-label">VΩ</div>
-            </div>
-            <div class="port-group">
-                <div class="port red" id="port10a"></div>
-                <div class="port-label">10A</div>
-            </div>
-            <div class="port-group">
-                <div class="port yellow" id="portTemp"></div>
-                <div class="port-label">TEMP</div>
+            <div class="controls">
+                <button class="btn" id="btnSelect">SELECT</button>
+                <button class="btn" id="btnHold">HOLD</button>
+                <button class="btn" id="btnRel">REL</button>
             </div>
         </div>
 
-        <div class="controls">
-            <button class="btn" id="btnSelect">SELECT</button>
-            <button class="btn" id="btnHold">HOLD</button>
-            <button class="btn" id="btnRel">REL</button>
+        <!-- TEST BENCH -->
+        <div class="test-bench" id="testBench">
+            <div class="bench-header">
+                <h2>&#128161; Test Bench</h2>
+                <div class="bench-scenario-label" id="benchLabel">Select a scenario below</div>
+            </div>
+            <div class="scenario-bar" id="scenarioBar"></div>
+            <div class="bench-svg-wrap" id="benchSvg">
+                <svg viewBox="0 0 400 280" width="400" height="280" style="max-width:100%;height:auto;">
+                    <rect x="0" y="0" width="400" height="280" fill="transparent"/>
+                    <text x="200" y="130" fill="#555" font-size="16" text-anchor="middle" font-family="Arial,sans-serif">Select a scenario above to begin testing</text>
+                    <text x="200" y="155" fill="#444" font-size="13" text-anchor="middle" font-family="Arial,sans-serif">Click test points to place the red probe</text>
+                </svg>
+            </div>
+            <div class="bench-status info" id="benchStatus">&#128161; Choose a scenario, then click test points on the device</div>
+
+            <!-- Probe wires overlay -->
+            <svg class="probe-overlay" id="probeOverlay" viewBox="0 0 400 280" preserveAspectRatio="xMidYMid meet" style="position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;">
+                <path id="probeLineRed" d="" fill="none" stroke="#ff4444" stroke-width="3" stroke-linecap="round" opacity="0"/>
+                <circle id="probeTipRed" r="5" fill="#ff4444" opacity="0"/>
+                <path id="probeLineBlack" d="" fill="none" stroke="#888" stroke-width="3" stroke-linecap="round" opacity="0"/>
+                <circle id="probeTipBlack" r="5" fill="#888" opacity="0"/>
+            </svg>
         </div>
     </div>
 
-    <div class="panel">
-        <h2>&#9889; Multimeter Simulator</h2>
-        <div id="modeHelp"></div>
-        <h3>&#128161; Practice Scenarios</h3>
-        <div class="scenario-btns" id="scenarioBtns"></div>
-        <div id="scenarioStatus"></div>
+    <!-- HELP -->
+    <div class="help-panel" id="helpPanel">
+        <h3>&#9889; Turn the dial to select a mode, then click a scenario to practice.</h3>
+        <p id="helpText">Black probe always goes to COM. Red probe connects to your test point. The reading updates in real time.</p>
     </div>
 </div>
 
 <script>
-// ===== SCENARIOS =====
+// ===== SCENARIO DEFINITIONS =====
 const SCENARIOS = [
-    { id: "outlet120", label: "120V Outlet", mode: "ACV", desc: "Black → COM, Red → VΩ. Test hot to neutral.", expect: "110-125V AC" },
-    { id: "dryer240", label: "240V Dryer", mode: "ACV", desc: "Test across both hots (L1 to L2).", expect: "~240V AC" },
-    { id: "carBattery", label: "12V Car Battery", mode: "DCV", desc: "Black → COM, Red → VΩ. Test battery terminals.", expect: "12.4-12.7V DC" },
-    { id: "continuityFuse", label: "Good Fuse", mode: "CONT", desc: "Black → COM, Red → VΩ. Test across fuse.", expect: "< 5Ω, beep" },
-    { id: "blownFuse", label: "Blown Fuse", mode: "CONT", desc: "Black → COM, Red → VΩ. Test across fuse.", expect: "OL (open)" },
-    { id: "heaterElement", label: "Heater Element", mode: "OHM", desc: "Power OFF. Test across element terminals.", expect: "8-50Ω" },
+    {
+        id: "outlet120", label: "120V Outlet", mode: "ACV",
+        desc: "Standard US 120V receptacle",
+        color: "#e8e0d0",
+        // SVG content with test points
+        svg: `
+            <rect x="100" y="40" width="200" height="200" rx="12" fill="#f5f0e8" stroke="#ccc" stroke-width="2"/>
+            <rect x="80" y="38" width="240" height="204" rx="14" fill="none" stroke="#bbb" stroke-width="1.5"/>
+            <!-- Faceplate screws -->
+            <circle cx="200" cy="50" r="4" fill="#ddd" stroke="#bbb" stroke-width="1"/>
+            <circle cx="200" cy="230" r="4" fill="#ddd" stroke="#bbb" stroke-width="1"/>
+            <!-- Left outlet -->
+            <rect x="140" y="80" width="50" height="70" rx="4" fill="#d0d0d0" stroke="#999" stroke-width="1"/>
+            <!-- Neutral (wide) -->
+            <rect x="148" y="90" width="12" height="20" rx="2" fill="#333" stroke="#555" stroke-width="1"/>
+            <text x="154" y="102" fill="#fff" font-size="7" text-anchor="middle">N</text>
+            <!-- Hot (narrow) -->
+            <rect x="148" y="115" width="12" height="20" rx="2" fill="#333" stroke="#555" stroke-width="1"/>
+            <text x="154" y="127" fill="#fff" font-size="7" text-anchor="middle">H</text>
+            <!-- Ground -->
+            <circle cx="154" cy="142" r="7" fill="#333" stroke="#555" stroke-width="1"/>
+            <text x="154" y="145" fill="#fff" font-size="6" text-anchor="middle">G</text>
+
+            <!-- Right outlet -->
+            <rect x="210" y="80" width="50" height="70" rx="4" fill="#d0d0d0" stroke="#999" stroke-width="1"/>
+            <rect x="218" y="90" width="12" height="20" rx="2" fill="#333" stroke="#555" stroke-width="1"/>
+            <text x="224" y="102" fill="#fff" font-size="7" text-anchor="middle">N</text>
+            <rect x="218" y="115" width="12" height="20" rx="2" fill="#333" stroke="#555" stroke-width="1"/>
+            <text x="224" y="127" fill="#fff" font-size="7" text-anchor="middle">H</text>
+            <circle cx="224" cy="142" r="7" fill="#333" stroke="#555" stroke-width="1"/>
+            <text x="224" y="145" fill="#fff" font-size="6" text-anchor="middle">G</text>
+
+            <!-- Test points (clickable) -->
+            <!-- Left outlet -->
+            <circle cx="154" cy="100" r="14" class="test-point" data-tp="neutral" fill="transparent" stroke="#4ade80" stroke-width="2" opacity="0"/>
+            <circle cx="154" cy="125" r="14" class="test-point" data-tp="hot" fill="transparent" stroke="#f59e0b" stroke-width="2" opacity="0"/>
+            <circle cx="154" cy="142" r="14" class="test-point" data-tp="ground" fill="transparent" stroke="#60a5fa" stroke-width="2" opacity="0"/>
+            <!-- Right outlet -->
+            <circle cx="224" cy="100" r="14" class="test-point" data-tp="neutral2" fill="transparent" stroke="#4ade80" stroke-width="2" opacity="0"/>
+            <circle cx="224" cy="125" r="14" class="test-point" data-tp="hot2" fill="transparent" stroke="#f59e0b" stroke-width="2" opacity="0"/>
+            <circle cx="224" cy="142" r="14" class="test-point" data-tp="ground2" fill="transparent" stroke="#60a5fa" stroke-width="2" opacity="0"/>
+
+            <!-- Labels -->
+            <text x="154" y="170" fill="#888" font-size="9" text-anchor="middle" font-family="Arial,sans-serif">N  H  G</text>
+            <text x="224" y="170" fill="#888" font-size="9" text-anchor="middle" font-family="Arial,sans-serif">N  H  G</text>
+            <text x="200" y="192" fill="#999" font-size="10" text-anchor="middle" font-family="Arial,sans-serif">15A 125V Receptacle</text>
+        `,
+        // Test point positions for probe lines (relative to viewBox 400x280)
+        tpPos: { hot: [154,125], neutral: [154,100], ground: [154,142], hot2: [224,125], neutral2: [224,100], ground2: [224,142] },
+        // Reading function per probe placement
+        getReading: function(tp, mode) {
+            if (mode === "ACV") {
+                if (tp === "hot" || tp === "hot2") return { value: (120+Math.random()*4).toFixed(1), unit: "V", extra: "Hot-neutral ~120V" };
+                if (tp === "neutral" || tp === "neutral2") return { value: "0.00", unit: "V", extra: "Neutral ~0V" };
+                if (tp === "ground" || tp === "ground2") return { value: "0.00", unit: "V", extra: "Ground ~0V" };
+            }
+            if (mode === "CONT") {
+                if (tp.includes("ground") || tp.includes("neutral")) return { value: "0.5", unit: "Ω", extra: "BEEP — good ground path" };
+                return { value: "OL", unit: "", extra: "No continuity to ground" };
+            }
+            return null;
+        },
+        defaultRef: "neutral",
+    },
+    {
+        id: "dryer240", label: "240V Dryer", mode: "ACV",
+        desc: "NEMA 14-30R 240V dryer outlet",
+        color: "#e0d8d0",
+        svg: `
+            <rect x="100" y="40" width="200" height="200" rx="12" fill="#eae4dc" stroke="#ccc" stroke-width="2"/>
+            <rect x="80" y="38" width="240" height="204" rx="14" fill="none" stroke="#bbb" stroke-width="1.5"/>
+            <circle cx="200" cy="50" r="4" fill="#ddd" stroke="#bbb" stroke-width="1"/>
+            <circle cx="200" cy="230" r="4" fill="#ddd" stroke="#bbb" stroke-width="1"/>
+            <!-- NEMA 14-30R slots -->
+            <rect x="145" y="80" width="110" height="90" rx="6" fill="#d0d0d0" stroke="#999" stroke-width="1"/>
+            <!-- L1 -->
+            <rect x="155" y="88" width="20" height="28" rx="3" fill="#333" stroke="#555" stroke-width="1"/>
+            <text x="165" y="105" fill="#f44" font-size="8" text-anchor="middle" font-weight="700">L1</text>
+            <!-- Neutral -->
+            <rect x="182" y="88" width="20" height="28" rx="3" fill="#333" stroke="#555" stroke-width="1"/>
+            <text x="192" y="105" fill="#888" font-size="8" text-anchor="middle">N</text>
+            <!-- L2 -->
+            <rect x="209" y="88" width="20" height="28" rx="3" fill="#333" stroke="#555" stroke-width="1"/>
+            <text x="219" y="105" fill="#f44" font-size="8" text-anchor="middle" font-weight="700">L2</text>
+            <!-- Ground -->
+            <circle cx="192" cy="155" r="9" fill="#333" stroke="#555" stroke-width="1"/>
+            <text x="192" y="158" fill="#fff" font-size="7" text-anchor="middle">G</text>
+
+            <circle cx="165" cy="102" r="16" class="test-point" data-tp="l1" fill="transparent" stroke="#f59e0b" stroke-width="2" opacity="0"/>
+            <circle cx="192" cy="102" r="16" class="test-point" data-tp="neutral" fill="transparent" stroke="#4ade80" stroke-width="2" opacity="0"/>
+            <circle cx="219" cy="102" r="16" class="test-point" data-tp="l2" fill="transparent" stroke="#f59e0b" stroke-width="2" opacity="0"/>
+            <circle cx="192" cy="155" r="16" class="test-point" data-tp="ground" fill="transparent" stroke="#60a5fa" stroke-width="2" opacity="0"/>
+
+            <text x="165" y="175" fill="#888" font-size="8" text-anchor="middle" font-family="Arial,sans-serif">L1</text>
+            <text x="192" y="175" fill="#888" font-size="8" text-anchor="middle" font-family="Arial,sans-serif">N</text>
+            <text x="219" y="175" fill="#888" font-size="8" text-anchor="middle" font-family="Arial,sans-serif">L2</text>
+            <text x="192" y="195" fill="#888" font-size="8" text-anchor="middle" font-family="Arial,sans-serif">G</text>
+            <text x="200" y="215" fill="#999" font-size="10" text-anchor="middle" font-family="Arial,sans-serif">NEMA 14-30R 240V</text>
+        `,
+        tpPos: { l1: [165,102], neutral: [192,102], l2: [219,102], ground: [192,155] },
+        getReading: function(tp, mode) {
+            if (mode === "ACV") {
+                if (tp === "l1") return { value: (120+Math.random()*4).toFixed(1), unit: "V", extra: "L1-N ~120V" };
+                if (tp === "l2") return { value: (120+Math.random()*4).toFixed(1), unit: "V", extra: "L2-N ~120V" };
+                if (tp === "neutral") return { value: "0.00", unit: "V", extra: "Neutral ~0V" };
+                if (tp === "ground") return { value: "0.00", unit: "V", extra: "Ground ~0V" };
+            }
+            return null;
+        },
+        defaultRef: "neutral",
+    },
+    {
+        id: "carBattery", label: "12V Car Battery", mode: "DCV",
+        desc: "Standard 12V lead-acid car battery",
+        color: "#d0d8e0",
+        svg: `
+            <rect x="100" y="50" width="200" height="180" rx="10" fill="#2a2a2a" stroke="#555" stroke-width="2"/>
+            <rect x="105" y="55" width="190" height="170" rx="8" fill="#333" stroke="#444" stroke-width="1"/>
+            <!-- Positive terminal -->
+            <rect x="120" y="42" width="40" height="18" rx="4" fill="#c00" stroke="#a00" stroke-width="1.5"/>
+            <text x="140" y="55" fill="#fff" font-size="11" text-anchor="middle" font-weight="700">+</text>
+            <!-- Negative terminal -->
+            <rect x="240" y="42" width="40" height="18" rx="4" fill="#222" stroke="#555" stroke-width="1.5"/>
+            <text x="260" y="55" fill="#888" font-size="11" text-anchor="middle" font-weight="700">-</text>
+            <!-- Battery label -->
+            <text x="200" y="110" fill="#666" font-size="14" text-anchor="middle" font-family="Arial,sans-serif">12V BATTERY</text>
+            <text x="200" y="140" fill="#555" font-size="11" text-anchor="middle" font-family="Arial,sans-serif">650 CCA</text>
+            <!-- Cells -->
+            <line x1="130" y1="160" x2="270" y2="160" stroke="#444" stroke-width="1"/>
+            <line x1="130" y1="180" x2="270" y2="180" stroke="#444" stroke-width="1"/>
+            <line x1="130" y1="200" x2="270" y2="200" stroke="#444" stroke-width="1"/>
+            <rect x="130" y="162" width="70" height="16" rx="2" fill="#222" stroke="#444" stroke-width="0.5"/>
+            <rect x="200" y="162" width="70" height="16" rx="2" fill="#222" stroke="#444" stroke-width="0.5"/>
+
+            <circle cx="140" cy="51" r="18" class="test-point" data-tp="pos" fill="transparent" stroke="#f59e0b" stroke-width="2" opacity="0"/>
+            <circle cx="260" cy="51" r="18" class="test-point" data-tp="neg" fill="transparent" stroke="#4ade80" stroke-width="2" opacity="0"/>
+            <text x="140" y="78" fill="#f44" font-size="9" text-anchor="middle" font-weight="700">POS +</text>
+            <text x="260" y="78" fill="#888" font-size="9" text-anchor="middle">NEG -</text>
+        `,
+        tpPos: { pos: [140,51], neg: [260,51] },
+        getReading: function(tp, mode) {
+            if (mode === "DCV") {
+                if (tp === "pos") return { value: (12.6+Math.random()*0.2).toFixed(2), unit: "V", extra: "12.6V = good battery" };
+                if (tp === "neg") return { value: "0.00", unit: "V", extra: "Negative terminal ~0V" };
+            }
+            return null;
+        },
+        defaultRef: "neg",
+    },
+    {
+        id: "goodFuse", label: "Good Fuse", mode: "CONT",
+        desc: "30A cartridge fuse — good condition",
+        color: "#d8e0d0",
+        svg: `
+            <rect x="100" y="80" width="200" height="120" rx="10" fill="#f0e8dc" stroke="#ccc" stroke-width="2"/>
+            <text x="200" y="106" fill="#888" font-size="11" text-anchor="middle" font-family="Arial,sans-serif">FUSE TEST</text>
+            <!-- Fuse body -->
+            <rect x="120" y="120" width="160" height="32" rx="16" fill="#fef3c7" stroke="#f59e0b" stroke-width="2"/>
+            <!-- Metal caps -->
+            <rect x="110" y="122" width="20" height="28" rx="4" fill="#999" stroke="#777" stroke-width="1.5"/>
+            <rect x="270" y="122" width="20" height="28" rx="4" fill="#999" stroke="#777" stroke-width="1.5"/>
+            <!-- Visible element (good = continuous line) -->
+            <line x1="130" y1="136" x2="270" y2="136" stroke="#f59e0b" stroke-width="3"/>
+            <text x="200" y="140" fill="#b45309" font-size="7" text-anchor="middle" font-family="Arial,sans-serif">continuous element</text>
+            <!-- Rating -->
+            <text x="200" y="150" fill="#b45309" font-size="12" text-anchor="middle" font-weight="700">30A</text>
+
+            <circle cx="120" cy="136" r="16" class="test-point" data-tp="end1" fill="transparent" stroke="#4ade80" stroke-width="2" opacity="0"/>
+            <circle cx="280" cy="136" r="16" class="test-point" data-tp="end2" fill="transparent" stroke="#4ade80" stroke-width="2" opacity="0"/>
+            <text x="120" y="170" fill="#888" font-size="9" text-anchor="middle">End 1</text>
+            <text x="280" y="170" fill="#888" font-size="9" text-anchor="middle">End 2</text>
+        `,
+        tpPos: { end1: [120,136], end2: [280,136] },
+        getReading: function(tp, mode) {
+            if (mode === "CONT") {
+                return { value: (0.5+Math.random()*2).toFixed(1), unit: "Ω", extra: "BEEP — fuse is good! <5Ω" };
+            }
+            if (mode === "OHM") {
+                return { value: (0.5+Math.random()*2).toFixed(1), unit: "Ω", extra: "Good fuse ~0.5-2Ω" };
+            }
+            return null;
+        },
+        defaultRef: "end1",
+    },
+    {
+        id: "blownFuse", label: "Blown Fuse", mode: "CONT",
+        desc: "30A cartridge fuse — blown/open",
+        color: "#e0d0d0",
+        svg: `
+            <rect x="100" y="80" width="200" height="120" rx="10" fill="#f0e8dc" stroke="#ccc" stroke-width="2"/>
+            <text x="200" y="106" fill="#888" font-size="11" text-anchor="middle" font-family="Arial,sans-serif">FUSE TEST</text>
+            <!-- Fuse body -->
+            <rect x="120" y="120" width="160" height="32" rx="16" fill="#fee2e2" stroke="#f87171" stroke-width="2"/>
+            <!-- Metal caps -->
+            <rect x="110" y="122" width="20" height="28" rx="4" fill="#999" stroke="#777" stroke-width="1.5"/>
+            <rect x="270" y="122" width="20" height="28" rx="4" fill="#999" stroke="#777" stroke-width="1.5"/>
+            <!-- Visible broken element -->
+            <line x1="130" y1="136" x2="190" y2="136" stroke="#999" stroke-width="3"/>
+            <line x1="210" y1="136" x2="270" y2="136" stroke="#999" stroke-width="3"/>
+            <circle cx="200" cy="136" r="4" fill="#333"/>
+            <text x="200" y="140" fill="#b91c1c" font-size="7" text-anchor="middle" font-family="Arial,sans-serif">BROKEN</text>
+            <text x="200" y="150" fill="#b91c1c" font-size="12" text-anchor="middle" font-weight="700">30A</text>
+
+            <circle cx="120" cy="136" r="16" class="test-point" data-tp="end1" fill="transparent" stroke="#f87171" stroke-width="2" opacity="0"/>
+            <circle cx="280" cy="136" r="16" class="test-point" data-tp="end2" fill="transparent" stroke="#f87171" stroke-width="2" opacity="0"/>
+            <text x="120" y="170" fill="#888" font-size="9" text-anchor="middle">End 1</text>
+            <text x="280" y="170" fill="#888" font-size="9" text-anchor="middle">End 2</text>
+        `,
+        tpPos: { end1: [120,136], end2: [280,136] },
+        getReading: function(tp, mode) {
+            if (mode === "CONT" || mode === "OHM") {
+                return { value: "OL", unit: "", extra: "No continuity — fuse is blown" };
+            }
+            return null;
+        },
+        defaultRef: "end1",
+    },
+    {
+        id: "heaterElement", label: "Heater Element", mode: "OHM",
+        desc: "Electric resistance heating element",
+        color: "#d8d0d8",
+        svg: `
+            <rect x="100" y="60" width="200" height="160" rx="10" fill="#1a1a2e" stroke="#333" stroke-width="2"/>
+            <!-- Element body -->
+            <rect x="130" y="90" width="140" height="80" rx="8" fill="#2a2a3e" stroke="#555" stroke-width="1"/>
+            <!-- Coil -->
+            <path d="M145,130 Q155,100 165,130 Q175,100 185,130 Q195,100 205,130 Q215,100 225,130 Q235,100 245,130 Q255,100 260,130" fill="none" stroke="#ff8844" stroke-width="3" stroke-linecap="round"/>
+            <text x="200" y="145" fill="#ff8844" font-size="10" text-anchor="middle" font-family="Arial,sans-serif">heating coil</text>
+            <!-- Terminal screws -->
+            <rect x="130" y="80" width="24" height="18" rx="3" fill="#999" stroke="#777" stroke-width="1.5"/>
+            <rect x="246" y="80" width="24" height="18" rx="3" fill="#999" stroke="#777" stroke-width="1.5"/>
+            <line x1="142" y1="82" x2="142" y2="96" stroke="#555" stroke-width="2"/>
+            <line x1="258" y1="82" x2="258" y2="96" stroke="#555" stroke-width="2"/>
+
+            <text x="142" y="76" fill="#aaa" font-size="9" text-anchor="middle">T1</text>
+            <text x="258" y="76" fill="#aaa" font-size="9" text-anchor="middle">T2</text>
+
+            <circle cx="142" cy="89" r="16" class="test-point" data-tp="t1" fill="transparent" stroke="#f59e0b" stroke-width="2" opacity="0"/>
+            <circle cx="258" cy="89" r="16" class="test-point" data-tp="t2" fill="transparent" stroke="#f59e0b" stroke-width="2" opacity="0"/>
+
+            <text x="142" y="195" fill="#888" font-size="9" text-anchor="middle">Terminal 1</text>
+            <text x="258" y="195" fill="#888" font-size="9" text-anchor="middle">Terminal 2</text>
+            <text x="200" y="210" fill="#666" font-size="10" text-anchor="middle" font-family="Arial,sans-serif">240V 5kW Heating Element</text>
+        `,
+        tpPos: { t1: [142,89], t2: [258,89] },
+        getReading: function(tp, mode) {
+            if (mode === "OHM") {
+                return { value: (12+Math.random()*6).toFixed(1), unit: "Ω", extra: "Good element ~12-18Ω   R = V²/P" };
+            }
+            if (mode === "CONT") {
+                return { value: (12+Math.random()*6).toFixed(1), unit: "Ω", extra: "BEEP — element has continuity" };
+            }
+            return null;
+        },
+        defaultRef: "t1",
+    },
 ];
 
-// ===== MODE CONFIG =====
+// ===== MODES =====
 const MODES = [
-    { id: "OFF",  label: "---",   symbol: "---",   rotation: 0 },
-    { id: "ACV",  label: "V~",    symbol: "V~",    rotation: 30 },
-    { id: "DCV",  label: "V--",   symbol: "V--",   rotation: 60 },
-    { id: "ACA",  label: "A~",    symbol: "A~",    rotation: 90 },
-    { id: "DCA",  label: "A--",   symbol: "A--",   rotation: 120 },
-    { id: "OHM",  label: "Ω",     symbol: "Ω",     rotation: 150 },
-    { id: "CONT", label: "CONT",  symbol: "🔔",    rotation: 180 },
-    { id: "HZ",   label: "Hz",    symbol: "Hz",    rotation: 210 },
-    { id: "UF",   label: "µF",    symbol: "µF",    rotation: 240 },
-    { id: "TEMP", label: "°C",    symbol: "°C",    rotation: 270 },
-    { id: "DIODE",label: "DIODE", symbol: "→|",    rotation: 300 },
+    { id: "OFF",  label: "---",  rotation: 0 },
+    { id: "ACV",  label: "V~",   rotation: 30 },
+    { id: "DCV",  label: "V--",  rotation: 60 },
+    { id: "ACA",  label: "A~",   rotation: 90 },
+    { id: "DCA",  label: "A--",  rotation: 120 },
+    { id: "OHM",  label: "Ω",    rotation: 150 },
+    { id: "CONT", label: "CONT", rotation: 180 },
+    { id: "HZ",   label: "Hz",   rotation: 210 },
+    { id: "UF",   label: "µF",   rotation: 240 },
+    { id: "TEMP", label: "°C",   rotation: 270 },
+    { id: "DIODE",label: "→|",   rotation: 300 },
 ];
 
-// ===== REALISTIC READINGS =====
-let readState = {
-    acv: null,
-    dcv: null,
-    aca: null,
-    dca: null,
-    ohm: null,
-    cont: null,
-    hz: null,
-    uf: null,
-    temp: null,
-    diode: null,
-};
-
-function generateReadings() {
-    readState.acv = 120 + (Math.random() - 0.5) * 10;          // 115-125V
-    readState.dcv = 12.5 + (Math.random() - 0.5) * 0.4;        // 12.3-12.7V
-    readState.aca = 5 + Math.random() * 10;                     // 5-15A
-    readState.dca = 1 + Math.random() * 4;                      // 1-5A
-    readState.ohm = 10 + Math.random() * 40;                    // 10-50Ω
-    readState.cont = Math.random() < 0.7 ? 0.5 + Math.random() * 4 : 9999; // <5Ω or OL
-    readState.hz = 59.9 + Math.random() * 0.2;                  // ~60Hz
-    readState.uf = 5 + Math.random() * 45;                      // 5-50µF
-    readState.temp = 20 + Math.random() * 10;                   // 20-30°C
-    readState.diode = 0.5 + Math.random() * 0.3;                // 0.5-0.8V
-}
-
-generateReadings();
-setInterval(generateReadings, 8000);
-
-// ===== AUTO-RANGE HELPERS =====
-function fmtAutoRange(val, unitBase, thresholds) {
-    if (val === null || val === undefined) return { value: "---", unit: "" };
-    thresholds = thresholds || [
-        { max: 1e-3, mult: 1e3, unit: "m" + unitBase, decimals: 1 },
-        { max: 1, mult: 1, unit: unitBase, decimals: 2 },
-        { max: 1e3, mult: 1, unit: unitBase, decimals: 1 },
-        { max: 1e6, mult: 1e-3, unit: "k" + unitBase, decimals: 2 },
-        { max: Infinity, mult: 1e-6, unit: "M" + unitBase, decimals: 2 },
-    ];
-    for (const t of thresholds) {
-        if (val < t.max) {
-            return { value: (val * t.mult).toFixed(t.decimals), unit: t.unit };
-        }
-    }
-    return { value: "OL", unit: "" };
-}
-
-function getReading(mode) {
-    switch (mode) {
-        case "OFF":  return { value: "---", unit: "", extra: "" };
-        case "ACV":  return fmtACV();
-        case "DCV":  return fmtDCV();
-        case "ACA":  return fmtACA();
-        case "DCA":  return fmtDCA();
-        case "OHM":  return fmtOHM();
-        case "CONT": return fmtCONT();
-        case "HZ":   return { value: readState.hz.toFixed(1), unit: "Hz", extra: "" };
-        case "UF":   return { value: readState.uf.toFixed(1), unit: "µF", extra: "" };
-        case "TEMP": return { value: readState.temp.toFixed(1), unit: "°C", extra: "" };
-        case "DIODE":return fmtDIODE();
-        default:     return { value: "---", unit: "", extra: "" };
-    }
-}
-
-function fmtACV() {
-    const v = readState.acv;
-    if (v < 0.5) return { value: "0.00", unit: "V", extra: "" };
-    if (v < 10) return { value: v.toFixed(3), unit: "mV", extra: "" };
-    return { value: v.toFixed(1), unit: "V", extra: v > 200 ? "240V range" : "120V range" };
-}
-function fmtDCV() {
-    const v = readState.dcv;
-    if (v < 0.5) return { value: (v*1000).toFixed(0), unit: "mV", extra: "" };
-    return { value: v.toFixed(2), unit: "V", extra: "" };
-}
-function fmtACA() {
-    const v = readState.aca;
-    if (v < 0.1) return { value: (v*1000).toFixed(0), unit: "mA", extra: "" };
-    return { value: v.toFixed(2), unit: "A", extra: "Clamp around one wire" };
-}
-function fmtDCA() {
-    const v = readState.dca;
-    if (v < 0.1) return { value: (v*1000).toFixed(0), unit: "mA", extra: "" };
-    return { value: v.toFixed(2), unit: "A", extra: "Press REL to zero" };
-}
-function fmtOHM() {
-    const v = readState.ohm;
-    if (v >= 1e6) return { value: (v/1e6).toFixed(2), unit: "MΩ", extra: "" };
-    if (v >= 1e3) return { value: (v/1e3).toFixed(2), unit: "kΩ", extra: "" };
-    return { value: v.toFixed(1), unit: "Ω", extra: "" };
-}
-function fmtCONT() {
-    if (readState.cont < 50) {
-        return { value: readState.cont.toFixed(1), unit: "Ω", extra: "🔊 BEEP — good path" };
-    }
-    return { value: "OL", unit: "", extra: "Open — no continuity" };
-}
-function fmtDIODE() {
-    const v = readState.diode;
-    return { value: v.toFixed(3), unit: "V", extra: "Silicon junction ~0.6V" };
-}
-
-// ===== METER CLASS =====
+// ===== MULTIMETER CLASS =====
 class Multimeter {
     constructor() {
         this.modeIdx = 0;
@@ -475,7 +588,10 @@ class Multimeter {
         this.hold = false;
         this.rel = false;
         this.heldReading = null;
+        this.activeScenario = null;
         this.probes = { com: false, vohm: false, a10: false, temp: false };
+        this.redProbeTp = null;   // which test point is red probe touching
+        this.blackProbeTp = null; // which test point is black probe touching
 
         this.screenValue = document.getElementById("screenValue");
         this.screenUnit = document.getElementById("screenUnit");
@@ -486,13 +602,15 @@ class Multimeter {
         this.relLabel = document.getElementById("relLabel");
         this.dial = document.getElementById("dial");
         this.dialRing = document.getElementById("dialRing");
-        this.modeHelp = document.getElementById("modeHelp");
-        this.scenarioBtns = document.getElementById("scenarioBtns");
-        this.scenarioStatus = document.getElementById("scenarioStatus");
-        this.probeBlack = document.getElementById("probeBlack");
-        this.probeRed = document.getElementById("probeRed");
-
-        this.actScenario = null;
+        this.benchSvg = document.getElementById("benchSvg");
+        this.benchStatus = document.getElementById("benchStatus");
+        this.benchLabel = document.getElementById("benchLabel");
+        this.scenarioBar = document.getElementById("scenarioBar");
+        this.helpText = document.getElementById("helpText");
+        this.probeLineRed = document.getElementById("probeLineRed");
+        this.probeTipRed = document.getElementById("probeTipRed");
+        this.probeLineBlack = document.getElementById("probeLineBlack");
+        this.probeTipBlack = document.getElementById("probeTipBlack");
 
         this.audioCtx = null;
         this.setupAudio();
@@ -503,16 +621,12 @@ class Multimeter {
         this.buildScenarios();
         this.updateHelp();
         this.updateDisplay();
-        this.updateProbes();
-        setInterval(() => this.updateDisplay(), 600);
+        setInterval(() => this.updateDisplay(), 500);
     }
 
     setupAudio() {
-        try {
-            this.audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-        } catch(e) {}
+        try { this.audioCtx = new (window.AudioContext || window.webkitAudioContext)(); } catch(e) {}
     }
-
     clickSound() {
         if (!this.audioCtx) return;
         try {
@@ -520,15 +634,12 @@ class Multimeter {
             const g = this.audioCtx.createGain();
             o.type = "square";
             o.frequency.setValueAtTime(2000, this.audioCtx.currentTime);
-            g.gain.setValueAtTime(0.06, this.audioCtx.currentTime);
-            g.gain.exponentialRampToValueAtTime(0.001, this.audioCtx.currentTime + 0.04);
-            o.connect(g);
-            g.connect(this.audioCtx.destination);
-            o.start();
-            o.stop(this.audioCtx.currentTime + 0.04);
+            g.gain.setValueAtTime(0.05, this.audioCtx.currentTime);
+            g.gain.exponentialRampToValueAtTime(0.001, this.audioCtx.currentTime + 0.03);
+            o.connect(g); g.connect(this.audioCtx.destination);
+            o.start(); o.stop(this.audioCtx.currentTime + 0.03);
         } catch(e) {}
     }
-
     beepSound() {
         if (!this.audioCtx) return;
         try {
@@ -536,12 +647,10 @@ class Multimeter {
             const g = this.audioCtx.createGain();
             o.type = "sine";
             o.frequency.setValueAtTime(880, this.audioCtx.currentTime);
-            g.gain.setValueAtTime(0.2, this.audioCtx.currentTime);
-            g.gain.exponentialRampToValueAtTime(0.001, this.audioCtx.currentTime + 0.25);
-            o.connect(g);
-            g.connect(this.audioCtx.destination);
-            o.start();
-            o.stop(this.audioCtx.currentTime + 0.25);
+            g.gain.setValueAtTime(0.15, this.audioCtx.currentTime);
+            g.gain.exponentialRampToValueAtTime(0.001, this.audioCtx.currentTime + 0.2);
+            o.connect(g); g.connect(this.audioCtx.destination);
+            o.start(); o.stop(this.audioCtx.currentTime + 0.2);
         } catch(e) {}
     }
 
@@ -552,17 +661,16 @@ class Multimeter {
             const m = document.createElement("div");
             m.className = "dial-marker";
             const angle = (360 / total) * i;
-            m.style.transform = `rotate(${angle}deg) translateY(-130px) rotate(${-angle}deg)`;
-            m.textContent = mode.symbol;
+            m.style.transform = `rotate(${angle}deg) translateY(-110px) rotate(${-angle}deg)`;
+            m.textContent = mode.label;
             this.dialRing.appendChild(m);
         });
     }
 
     bindDial() {
         const total = MODES.length;
-        const angleStep = 360 / total;
-        let isDragging = false, startAngle = 0;
-
+        const step = 360 / total;
+        let dragging = false, startAngle = 0;
         const getAngle = (e) => {
             const rect = this.dial.getBoundingClientRect();
             const cx = rect.left + rect.width / 2;
@@ -571,39 +679,30 @@ class Multimeter {
             const y = e.touches ? e.touches[0].clientY : e.clientY;
             return (Math.atan2(y - cy, x - cx) * 180 / Math.PI + 450) % 360;
         };
-
-        const start = (e) => {
-            isDragging = true;
-            startAngle = getAngle(e) - this.currentRotation;
-            e.preventDefault();
-        };
+        const start = (e) => { dragging = true; startAngle = getAngle(e) - this.currentRotation; e.preventDefault(); };
         const move = (e) => {
-            if (!isDragging) return;
-            const newRot = Math.round((getAngle(e) - startAngle) / angleStep) * angleStep;
-            if (newRot !== this.currentRotation) {
-                this.currentRotation = newRot;
-                this.dial.style.transform = `rotate(${this.currentRotation}deg)`;
-                const idx = Math.round(this.currentRotation / angleStep) % total;
-                this.setMode(idx);
+            if (!dragging) return;
+            const nr = Math.round((getAngle(e) - startAngle) / step) * step;
+            if (nr !== this.currentRotation) {
+                this.currentRotation = nr;
+                this.dial.style.transform = `rotate(${nr}deg)`;
+                this.setMode(Math.round(nr / step) % total);
                 this.clickSound();
             }
             e.preventDefault();
         };
-        const end = () => { isDragging = false; };
-
+        const end = () => { dragging = false; };
         this.dial.addEventListener("mousedown", start);
         window.addEventListener("mousemove", move);
         window.addEventListener("mouseup", end);
         this.dial.addEventListener("touchstart", start, { passive: false });
         window.addEventListener("touchmove", move, { passive: false });
         window.addEventListener("touchend", end);
-
         this.dial.addEventListener("click", (e) => {
             if (e.detail !== 1) return;
-            this.currentRotation = (this.currentRotation + angleStep) % 360;
+            this.currentRotation = (this.currentRotation + step) % 360;
             this.dial.style.transform = `rotate(${this.currentRotation}deg)`;
-            const idx = Math.round(this.currentRotation / angleStep) % total;
-            this.setMode(idx);
+            this.setMode(Math.round(this.currentRotation / step) % total);
             this.clickSound();
         });
     }
@@ -612,12 +711,8 @@ class Multimeter {
         this.modeIdx = idx;
         const mode = MODES[idx];
         this.modeLabel.textContent = mode.label;
-        if (mode.id === "OFF") {
-            this.autoLabel.style.display = "none";
-        } else {
-            this.autoLabel.style.display = "";
-        }
-        if (this.modeIdx === 0) this.heldReading = null;
+        this.autoLabel.style.display = mode.id === "OFF" ? "none" : "";
+        if (mode.id === "OFF") this.heldReading = null;
         this.updateHelp();
         this.updateDisplay();
     }
@@ -628,12 +723,7 @@ class Multimeter {
             this.hold = !this.hold;
             e.currentTarget.classList.toggle("active", this.hold);
             this.holdLabel.classList.toggle("active", this.hold);
-            if (this.hold) {
-                const r = getReading(MODES[this.modeIdx].id);
-                this.heldReading = r;
-            } else {
-                this.heldReading = null;
-            }
+            this.heldReading = this.hold ? this.getCurrentReading() : null;
         });
         document.getElementById("btnRel").addEventListener("click", (e) => {
             this.rel = !this.rel;
@@ -646,102 +736,215 @@ class Multimeter {
     }
 
     bindPorts() {
-        const ports = [
-            { id: "portCom", key: "com", cls: "black" },
-            { id: "portVohm", key: "vohm", cls: "red" },
-            { id: "port10a", key: "a10", cls: "red" },
-            { id: "portTemp", key: "temp", cls: "yellow" },
+        const list = [
+            { id: "portCom", key: "com" },
+            { id: "portVohm", key: "vohm" },
+            { id: "port10a", key: "a10" },
+            { id: "portTemp", key: "temp" },
         ];
-        ports.forEach(p => {
+        list.forEach(p => {
             const el = document.getElementById(p.id);
             el.addEventListener("click", () => {
                 this.probes[p.key] = !this.probes[p.key];
                 el.classList.toggle("connected", this.probes[p.key]);
-                this.updateProbes();
                 this.updateDisplay();
             });
         });
     }
 
-    updateProbes() {
-        const hasCom = this.probes.com;
-        const hasVohm = this.probes.vohm;
-        const hasA10 = this.probes.a10;
-        const hasTemp = this.probes.temp;
-
-        // Black probe line
-        if (hasCom) {
-            this.probeBlack.style.width = "35%";
-            this.probeBlack.style.opacity = "1";
-            this.probeBlack.style.left = "5%";
-        } else {
-            this.probeBlack.style.width = "0";
-            this.probeBlack.style.opacity = "0";
-        }
-        // Red probe line
-        if (hasVohm || hasA10 || hasTemp) {
-            this.probeRed.style.width = "35%";
-            this.probeRed.style.opacity = "1";
-            this.probeRed.style.right = "5%";
-        } else {
-            this.probeRed.style.width = "0";
-            this.probeRed.style.opacity = "0";
-        }
-    }
-
+    // ===== SCENARIOS =====
     buildScenarios() {
-        this.scenarioBtns.innerHTML = "";
+        this.scenarioBar.innerHTML = "";
         SCENARIOS.forEach(s => {
             const btn = document.createElement("button");
             btn.textContent = s.label;
-            btn.addEventListener("click", () => {
-                this.actScenario = s;
-                // Find the mode and set it
-                const idx = MODES.findIndex(m => m.id === s.mode);
-                if (idx >= 0) {
-                    this.currentRotation = MODES[idx].rotation;
-                    this.dial.style.transform = `rotate(${this.currentRotation}deg)`;
-                    this.setMode(idx);
-                }
-                this.scenarioStatus.innerHTML = `
-                    <div class="success"><strong>${s.label}</strong><br>${s.desc}<br><em>Expected: ${s.expect}</em></div>
-                `;
-                this.updateDisplay();
-                this.renderScenarioProbes(s);
-            });
-            this.scenarioBtns.appendChild(btn);
+            btn.addEventListener("click", () => this.selectScenario(s.id));
+            this.scenarioBar.appendChild(btn);
         });
     }
 
-    renderScenarioProbes(s) {
-        // Auto-connect probes for the scenario
-        if (s.mode === "ACA" || s.mode === "DCA") {
-            // Clamp mode - no probe wires needed
+    selectScenario(id) {
+        const s = SCENARIOS.find(x => x.id === id);
+        if (!s) return;
+        this.activeScenario = s;
+        this.redProbeTp = null;
+        this.blackProbeTp = null;
+
+        // Auto-set mode
+        const mi = MODES.findIndex(m => m.id === s.mode);
+        if (mi >= 0) {
+            this.currentRotation = MODES[mi].rotation;
+            this.dial.style.transform = `rotate(${this.currentRotation}deg)`;
+            this.setMode(mi);
+        }
+
+        // Auto-connect probes
+        this.probes.com = true;
+        this.probes.vohm = true;
+        document.getElementById("portCom").classList.add("connected");
+        document.getElementById("portVohm").classList.add("connected");
+
+        // Auto-place black probe on default reference
+        if (s.defaultRef) {
+            this.blackProbeTp = s.defaultRef;
+        }
+
+        // Render the SVG
+        this.renderBenchSvg(s);
+
+        // Highlight scenario button
+        this.scenarioBar.querySelectorAll("button").forEach(b => b.classList.remove("active"));
+        const btns = this.scenarioBar.querySelectorAll("button");
+        for (const b of btns) {
+            if (b.textContent === s.label) { b.classList.add("active"); break; }
+        }
+
+        this.benchLabel.innerHTML = `<span>${s.label}</span> &mdash; ${s.desc}`;
+        this.benchStatus.className = "bench-status info";
+        this.benchStatus.textContent = `Click test points on the ${s.label.toLowerCase()} to place the red probe. Black probe on reference.`;
+        this.updateDisplay();
+    }
+
+    renderBenchSvg(s) {
+        // Parse scenario SVG and inject click handlers on test-points
+        const wrap = document.createElement("div");
+        wrap.style.cssText = "width:100%;height:100%;display:flex;justify-content:center;align-items:center;";
+        wrap.innerHTML = s.svg;
+        // Bind test point clicks
+        wrap.querySelectorAll(".test-point").forEach(el => {
+            el.style.cursor = "pointer";
+            el.addEventListener("click", (e) => {
+                const tp = el.getAttribute("data-tp");
+                this.redProbeTp = tp;
+                this.updateProbeLines();
+                this.updateDisplay();
+                e.stopPropagation();
+            });
+        });
+        this.benchSvg.innerHTML = "";
+        this.benchSvg.appendChild(wrap);
+
+        // Reset probe lines
+        this.probeLineRed.setAttribute("opacity", "0");
+        this.probeTipRed.setAttribute("opacity", "0");
+        this.probeLineBlack.setAttribute("opacity", "0");
+        this.probeTipBlack.setAttribute("opacity", "0");
+    }
+
+    updateProbeLines() {
+        const s = this.activeScenario;
+        if (!s) return;
+
+        // Get the SVG element's position relative to the viewBox
+        const svgEl = this.benchSvg.querySelector("svg");
+        if (!svgEl) return;
+
+        // Probe line from meter VΩ port area to the test point on the bench SVG
+        // We overlay on the bench SVG viewBox (400x280)
+        // Meter port positions (approximate): COM at (60, 260), VΩ at (140, 260)
+        // in the bench viewBox coordinates
+        const meterPortX = 340, meterPortY = 260;
+        const meterComX = 280, meterComY = 260;
+
+        // Red probe line
+        if (this.redProbeTp && s.tpPos[this.redProbeTp]) {
+            const [tx, ty] = s.tpPos[this.redProbeTp];
+            const d = `M${meterPortX},${meterPortY} Q${(meterPortX+tx)/2},${Math.min(meterPortY,ty)-30} ${tx},${ty}`;
+            this.probeLineRed.setAttribute("d", d);
+            this.probeLineRed.setAttribute("opacity", "0.9");
+            this.probeTipRed.setAttribute("cx", tx);
+            this.probeTipRed.setAttribute("cy", ty);
+            this.probeTipRed.setAttribute("opacity", "1");
         } else {
-            this.probes.com = true;
-            this.probes.vohm = true;
-            document.getElementById("portCom").classList.add("connected");
-            document.getElementById("portVohm").classList.add("connected");
-            this.updateProbes();
+            this.probeLineRed.setAttribute("opacity", "0");
+            this.probeTipRed.setAttribute("opacity", "0");
+        }
+
+        // Black probe line
+        if (this.blackProbeTp && s.tpPos[this.blackProbeTp]) {
+            const [tx, ty] = s.tpPos[this.blackProbeTp];
+            const d = `M${meterComX},${meterComY} Q${(meterComX+tx)/2},${Math.min(meterComY,ty)-20} ${tx},${ty}`;
+            this.probeLineBlack.setAttribute("d", d);
+            this.probeLineBlack.setAttribute("opacity", "0.9");
+            this.probeTipBlack.setAttribute("cx", tx);
+            this.probeTipBlack.setAttribute("cy", ty);
+            this.probeTipBlack.setAttribute("opacity", "1");
+        } else {
+            this.probeLineBlack.setAttribute("opacity", "0");
+            this.probeTipBlack.setAttribute("opacity", "0");
         }
     }
 
-    updateHelp() {
-        const mode = MODES[this.modeIdx];
-        const help = {
-            OFF: "<p>Turn the dial to select a measurement mode.</p>",
-            ACV: "<h3>AC Voltage (V~)</h3><ol><li>Black lead → COM</li><li>Red lead → VΩ</li><li>Touch probes to test points</li></ol><div class='warning'>Verify voltage type (AC/DC) before measuring. Never measure voltage on the amp port.</div><p><strong>Common readings:</strong> 120V outlet, 240V dryer, 208V commercial</p>",
-            DCV: "<h3>DC Voltage (V--)</h3><ol><li>Black lead → COM</li><li>Red lead → VΩ</li><li>Red to positive (+), black to negative (-)</li></ol><div class='warning'>Reverse polarity shows negative value — switch leads.</div><p><strong>Common readings:</strong> 12.6V car battery, 5V USB, 24V controls</p>",
-            ACA: "<h3>AC Current (A~)</h3><ol><li>Open clamp and place around ONE conductor</li><li>Read the current value</li></ol><div class='warning'>Do NOT clamp around multiple wires — you'll cancel the reading.</div><p><strong>Tip:</strong> Clamp around a single hot wire, not the whole cable.</p>",
-            DCA: "<h3>DC Current (A--)</h3><ol><li>Press REL to zero the clamp</li><li>Clamp around one wire with proper orientation</li></ol><p><strong>Tip:</strong> DC clamp readings require zeroing first, then proper direction.</p>",
-            OHM: "<h3>Resistance (Ω)</h3><ol><li>Power OFF the circuit</li><li>Black → COM, Red → VΩ</li><li>Touch probes across the component</li></ol><div class='warning'>NEVER measure resistance on a live circuit — you'll damage the meter.</div><p><strong>Readings:</strong> Heater element 8-50Ω. OL = open/burned.</p>",
-            CONT: "<h3>Continuity (beep)</h3><ol><li>Power OFF the circuit</li><li>Black → COM, Red → VΩ</li><li>Touch probes across the path</li></ol><p><strong>Beep</strong> = complete path (under ~30Ω). <strong>OL</strong> = open.</p><p><strong>Use on:</strong> fuses, switches, wire ends, breaker contacts.</p>",
-            HZ: "<h3>Frequency (Hz)</h3><ol><li>Black → COM, Red → VΩ</li><li>Measure across a powered conductor</li></ol><p>Line frequency should be ~60 Hz (US).</p>",
-            UF: "<h3>Capacitance (µF)</h3><ol><li>DISCHARGE capacitor first</li><li>Insert into µF ports</li></ol><div class='warning'>Capacitors can hold lethal charge after power is off — discharge first!</div>",
-            TEMP: "<h3>Temperature (°C)</h3><ol><li>Connect thermocouple to TEMP port</li><li>Touch probe to the surface</li></ol><p>Room temp ~20-25°C. HVAC ducts 10-15°C.</p>",
-            DIODE: "<h3>Diode Test</h3><ol><li>Black → COM, Red → VΩ</li><li>Red to anode (+), black to cathode (-)</li></ol><p>Forward voltage: silicon ~0.5-0.8V. Reverse: OL (open).</p>",
+    // ===== READING =====
+    getCurrentReading() {
+        const mode = MODES[this.modeIdx].id;
+        if (mode === "OFF") return { value: "---", unit: "", extra: "" };
+
+        const s = this.activeScenario;
+        if (!s) {
+            // No scenario — show generic random reading
+            return this.getGenericReading(mode);
+        }
+
+        const tp = this.redProbeTp;
+        if (!tp) {
+            return { value: "---", unit: "", extra: "Click a test point to place the red probe" };
+        }
+
+        // Check for dangerous settings
+        const modeIsAmp = mode === "ACA" || mode === "DCA";
+        const a10 = this.probes.a10;
+        const vohm = this.probes.vohm;
+        if ((mode === "ACV" || mode === "DCV") && a10 && !vohm) {
+            return { value: "DANGER", unit: "", extra: "Voltage on 10A port! Move red lead to VΩ" };
+        }
+        if (mode === "OHM" && a10) {
+            return { value: "DANGER", unit: "", extra: "Ohms on 10A port! Move red lead to VΩ" };
+        }
+
+        // Get scenario-specific reading
+        const r = s.getReading(tp, mode);
+        if (r) {
+            // Beep for continuity
+            if (mode === "CONT" && r.value !== "OL") this.beepSound();
+            return r;
+        }
+
+        // Fallback: the wrong mode for this scenario
+        const expectedMode = s.mode;
+        return {
+            value: "---",
+            unit: "",
+            extra: this.getModeAdvice(mode, expectedMode),
         };
-        this.modeHelp.innerHTML = help[mode.id] || "<p>Select a mode to see instructions.</p>";
+    }
+
+    getGenericReading(mode) {
+        switch (mode) {
+            case "ACV": return { value: (120+Math.random()*5).toFixed(1), unit: "V", extra: "Select a scenario to practice" };
+            case "DCV": return { value: (12+Math.random()*0.6).toFixed(2), unit: "V", extra: "Select a scenario to practice" };
+            case "ACA": return { value: (5+Math.random()*10).toFixed(2), unit: "A", extra: "Clamp around one wire" };
+            case "DCA": return { value: (1+Math.random()*4).toFixed(2), unit: "A", extra: "Press REL to zero" };
+            case "OHM": return { value: (10+Math.random()*40).toFixed(1), unit: "Ω", extra: "Select a scenario to practice" };
+            case "CONT": return { value: "OL", unit: "", extra: "Open — select a scenario" };
+            case "HZ": return { value: (59.9+Math.random()*0.2).toFixed(1), unit: "Hz", extra: "" };
+            case "UF": return { value: (5+Math.random()*45).toFixed(1), unit: "µF", extra: "" };
+            case "TEMP": return { value: (20+Math.random()*10).toFixed(1), unit: "°C", extra: "" };
+            case "DIODE": return { value: (0.5+Math.random()*0.3).toFixed(3), unit: "V", extra: "Silicon junction ~0.6V" };
+            default: return { value: "---", unit: "", extra: "" };
+        }
+    }
+
+    getModeAdvice(current, expected) {
+        const map = {
+            ACV: "Switch to V~ (AC voltage) for this test",
+            DCV: "Switch to V-- (DC voltage) for this test",
+            OHM: "Switch to Ω (resistance) for this test",
+            CONT: "Switch to CONTINUITY (beep) for this test",
+            HZ: "Switch to Hz for this test",
+            UF: "Switch to µF for this test",
+        };
+        return map[current] || map[expected] || "Wrong mode for this scenario";
     }
 
     updateDisplay() {
@@ -749,130 +952,47 @@ class Multimeter {
             this.renderReading(this.heldReading);
             return;
         }
-        const mode = MODES[this.modeIdx];
-        const modeId = mode.id;
-
-        // Check for dangerous settings
-        const isAmpMode = modeId === "ACA" || modeId === "DCA";
-        const vohmConnected = this.probes.vohm;
-        const a10Connected = this.probes.a10;
-        const comConnected = this.probes.com;
-
-        let warning = "";
-        if (!comConnected && modeId !== "OFF") {
-            warning = "Connect black lead to COM";
-        } else if (isAmpMode && vohmConnected && !a10Connected) {
-            warning = "For amps, move red lead to 10A port";
-        } else if ((modeId === "ACV" || modeId === "DCV") && a10Connected) {
-            warning = "⚠ VOLTAGE ON AMP PORT — DANGER! Move red to VΩ";
-        } else if (modeId === "OHM" || modeId === "CONT") {
-            warning = "Verify circuit is POWER OFF before testing";
-        }
-
-        const reading = getReading(modeId);
-
-        if (modeId === "CONT" && reading.value !== "OL") {
-            this.beepSound();
-        } else if (modeId === "CONT") {
-            // No beep for OL
-        }
-
-        if (warning) {
-            this.screenExtra.textContent = warning;
-        } else {
-            this.screenExtra.textContent = reading.extra || "";
-        }
-
-        this.renderReading(reading);
+        const r = this.getCurrentReading();
+        this.renderReading(r);
+        this.updateProbeLines();
     }
 
     renderReading(r) {
+        if (!r) { this.screenValue.textContent = "---"; this.screenUnit.textContent = ""; this.screenExtra.textContent = ""; return; }
         this.screenValue.textContent = r.value;
         this.screenUnit.textContent = r.unit || "";
-    }
-}
+        this.screenExtra.textContent = r.extra || "";
 
-// ===== SCENARIO-SPECIFIC OVERRIDES =====
-// When user selects a scenario, we temporarily override readings to match
-let scenarioOverride = null;
-const origGetReading = window.getReading;
-
-// Patch getReading to allow scenario overrides
-const _origGetReading = getReading;
-getReading = function(mode) {
-    if (scenarioOverride) {
-        const ov = scenarioOverride(mode);
-        if (ov) return ov;
-    }
-    return _origGetReading(mode);
-};
-
-function setScenarioReading(s) {
-    const overrides = {
-        "outlet120": (mode) => {
-            if (mode === "ACV") return { value: (120 + (Math.random()-0.5)*4).toFixed(1), unit: "V", extra: "Hot-neutral ~120V ✓" };
-            return null;
-        },
-        "dryer240": (mode) => {
-            if (mode === "ACV") return { value: (240 + (Math.random()-0.5)*4).toFixed(1), unit: "V", extra: "L1-L2 ~240V ✓" };
-            return null;
-        },
-        "carBattery": (mode) => {
-            if (mode === "DCV") return { value: (12.6 + (Math.random()-0.5)*0.2).toFixed(2), unit: "V", extra: "12.6V = good battery" };
-            return null;
-        },
-        "continuityFuse": (mode) => {
-            if (mode === "CONT") return { value: (0.5 + Math.random()*2).toFixed(1), unit: "Ω", extra: "🔊 BEEP — fuse is good" };
-            return null;
-        },
-        "blownFuse": (mode) => {
-            if (mode === "CONT") return { value: "OL", unit: "", extra: "No continuity — fuse is blown" };
-            return null;
-        },
-        "heaterElement": (mode) => {
-            if (mode === "OHM") return { value: (12 + Math.random()*8).toFixed(1), unit: "Ω", extra: "Good element ~12-20Ω" };
-            return null;
-        },
-    };
-
-    const fn = overrides[s.id];
-    if (fn) {
-        scenarioOverride = fn;
-    } else {
-        scenarioOverride = null;
-    }
-}
-
-// Patch scenario button to set override
-const origBuildScenarios = Multimeter.prototype.buildScenarios;
-Multimeter.prototype.buildScenarios = function() {
-    this.scenarioBtns.innerHTML = "";
-    SCENARIOS.forEach(s => {
-        const btn = document.createElement("button");
-        btn.textContent = s.label;
-        btn.addEventListener("click", () => {
-            this.actScenario = s;
-            const idx = MODES.findIndex(m => m.id === s.mode);
-            if (idx >= 0) {
-                this.currentRotation = MODES[idx].rotation;
-                this.dial.style.transform = `rotate(${this.currentRotation}deg)`;
-                this.setMode(idx);
+        // Update bench status
+        if (r.extra && this.activeScenario && this.redProbeTp) {
+            if (r.value !== "---" && r.value !== "DANGER") {
+                this.benchStatus.className = "bench-status ok";
+                this.benchStatus.textContent = `${r.value} ${r.unit} — ${r.extra}`;
+            } else if (r.value === "DANGER") {
+                this.benchStatus.className = "bench-status warn";
+                this.benchStatus.textContent = r.extra;
             }
-            setScenarioReading(s);
-            this.scenarioStatus.innerHTML = `
-                <div class="success"><strong>${s.label}</strong><br>${s.desc}<br><em>Expected: ${s.expect}</em></div>
-            `;
-            this.updateDisplay();
-            // Auto-connect probes
-            this.probes.com = true;
-            this.probes.vohm = true;
-            document.getElementById("portCom").classList.add("connected");
-            document.getElementById("portVohm").classList.add("connected");
-            this.updateProbes();
-        });
-        this.scenarioBtns.appendChild(btn);
-    });
-};
+        }
+    }
+
+    updateHelp() {
+        const mode = MODES[this.modeIdx];
+        const help = {
+            OFF: "<p>Turn the dial to select a measurement mode, then choose a scenario above.</p>",
+            ACV: "<p><strong>AC Voltage (V~)</strong><br>Black → COM, Red → VΩ.<br>Test outlets, panels, and line voltage.<br>Expect ~120V residential, ~240V large appliances.</p>",
+            DCV: "<p><strong>DC Voltage (V--)</strong><br>Black → COM, Red → VΩ.<br>Red to positive (+), black to negative (-).<br>Expect ~12.6V car battery, 5V USB, 24V controls.</p>",
+            ACA: "<p><strong>AC Current (A~)</strong><br>Use clamp around ONE conductor.<br>Don't clamp around multiple wires — readings cancel.</p>",
+            DCA: "<p><strong>DC Current (A--)</strong><br>Press REL to zero, then clamp around one wire.<br>Orientation matters for DC.</p>",
+            OHM: "<p><strong>Resistance (Ω)</strong><br>Power OFF the circuit. Black → COM, Red → VΩ.<br>Heaters 8-50Ω. OL = open/burned element.</p><div class='warn'>NEVER measure resistance on a live circuit.</div>",
+            CONT: "<p><strong>Continuity (beep)</strong><br>Power OFF. Black → COM, Red → VΩ.<br>BEEP = complete path (under ~30Ω). OL = open.</p>",
+            HZ: "<p><strong>Frequency (Hz)</strong><br>Measure across a powered conductor. Line frequency ~60Hz (US).</p>",
+            UF: "<p><strong>Capacitance (µF)</strong><br>DISCHARGE capacitor first. Capacitors hold lethal charge after power off.</p>",
+            TEMP: "<p><strong>Temperature (°C)</strong><br>Connect thermocouple to TEMP port.<br>Room temp ~20-25°C.</p>",
+            DIODE: "<p><strong>Diode Test</strong><br>Red to anode (+), black to cathode (-).<br>Forward voltage silicon ~0.5-0.8V. Reverse = OL.</p>",
+        };
+        this.helpText.innerHTML = help[mode.id] || "<p>Select a mode and scenario to begin.</p>";
+    }
+}
 
 // Initialize
 const meter = new Multimeter();
