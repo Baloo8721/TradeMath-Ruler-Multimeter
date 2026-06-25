@@ -203,6 +203,21 @@
         .bench-status.warn { background: rgba(255,200,0,0.15); border-left: 3px solid #fc0; }
         .bench-status.info { background: rgba(0,200,255,0.15); border-left: 3px solid #0cf; }
 
+        .probe-selector {
+            display: flex; align-items: center; gap: 6px; margin-bottom: 6px;
+        }
+        .probe-label { font-size: 0.75em; color: #aaa; margin-right: 2px; }
+        .probe-btn {
+            display: flex; align-items: center; gap: 4px; padding: 4px 10px;
+            border: 1.5px solid #555; border-radius: 5px;
+            background: transparent; color: #ccc; cursor: pointer;
+            font-size: 0.75em; font-weight: 600; transition: all 0.15s;
+        }
+        .probe-btn.red.active { border-color: #ff4444; color: #ff6666; background: rgba(255,50,50,0.12); }
+        .probe-btn.black.active { border-color: #888; color: #fff; background: rgba(100,100,100,0.15); }
+        .probe-dot { display: inline-block; width: 10px; height: 10px; border-radius: 50%; }
+        .probe-dot.red { background: #ff4444; }
+        .probe-dot.black { background: #888; border: 1px solid #666; }
         .scenario-bar {
             display: flex; flex-wrap: wrap; gap: 4px; margin-bottom: 6px;
         }
@@ -280,15 +295,20 @@
                 <h2>&#128161; Test Bench</h2>
                 <div class="bench-scenario-label" id="benchLabel">Select a scenario below</div>
             </div>
+            <div class="probe-selector">
+                <span class="probe-label">Probe:</span>
+                <button class="probe-btn red active" id="probeSelectRed"><span class="probe-dot red"></span> Red</button>
+                <button class="probe-btn black" id="probeSelectBlack"><span class="probe-dot black"></span> Black</button>
+            </div>
             <div class="scenario-bar" id="scenarioBar"></div>
             <div class="bench-svg-wrap" id="benchSvg">
                 <svg viewBox="0 0 400 280" width="400" height="280" style="max-width:100%;height:auto;">
                     <rect x="0" y="0" width="400" height="280" fill="transparent"/>
                     <text x="200" y="130" fill="#555" font-size="16" text-anchor="middle" font-family="Arial,sans-serif">Select a scenario above to begin testing</text>
-                    <text x="200" y="155" fill="#444" font-size="13" text-anchor="middle" font-family="Arial,sans-serif">Click red probe · Right-click black probe</text>
+                    <text x="200" y="155" fill="#444" font-size="13" text-anchor="middle" font-family="Arial,sans-serif">Tap Red or Black probe, then tap a test point</text>
                 </svg>
             </div>
-            <div class="bench-status info" id="benchStatus">&#128161; Choose a scenario, then click to place red probe · right-click for black probe</div>
+            <div class="bench-status info" id="benchStatus">&#128161; Choose a scenario, tap a probe color, then tap a test point</div>
 
             <!-- Probe wires overlay -->
             <svg class="probe-overlay" id="probeOverlay" viewBox="0 0 400 280" preserveAspectRatio="xMidYMid meet" style="position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;">
@@ -302,8 +322,8 @@
 
     <!-- HELP -->
     <div class="help-panel" id="helpPanel">
-        <h3>&#9889; Turn the dial to select a mode, then click a scenario to practice.</h3>
-        <p id="helpText">Black probe always goes to COM. Red probe connects to your test point. The reading updates in real time.</p>
+        <h3>&#9889; Turn the dial to select a mode, then choose a scenario below.</h3>
+        <p id="helpText">Tap <strong>Red</strong> or <strong>Black</strong> above the scenarios to select which probe to place, then tap a test point on the device. The reading updates in real time.</p>
     </div>
 </div>
 
@@ -609,9 +629,10 @@ class Multimeter {
         this.rel = false;
         this.heldReading = null;
         this.activeScenario = null;
+        this.activeProbe = "red";
         this.probes = { com: false, vohm: false, a10: false, temp: false };
-        this.redProbeTp = null;   // which test point is red probe touching
-        this.blackProbeTp = null; // which test point is black probe touching
+        this.redProbeTp = null;
+        this.blackProbeTp = null;
 
         this.screenValue = document.getElementById("screenValue");
         this.screenUnit = document.getElementById("screenUnit");
@@ -631,6 +652,8 @@ class Multimeter {
         this.probeTipRed = document.getElementById("probeTipRed");
         this.probeLineBlack = document.getElementById("probeLineBlack");
         this.probeTipBlack = document.getElementById("probeTipBlack");
+        this.probeBtnRed = document.getElementById("probeSelectRed");
+        this.probeBtnBlack = document.getElementById("probeSelectBlack");
 
         this.audioCtx = null;
         this.setupAudio();
@@ -639,6 +662,7 @@ class Multimeter {
         this.bindControls();
         this.bindPorts();
         this.buildScenarios();
+        this.bindProbeSelector();
         this.updateHelp();
         this.updateDisplay();
         setInterval(() => this.updateDisplay(), 500);
@@ -772,6 +796,19 @@ class Multimeter {
         });
     }
 
+    bindProbeSelector() {
+        this.probeBtnRed.addEventListener("click", () => {
+            this.activeProbe = "red";
+            this.probeBtnRed.classList.add("active");
+            this.probeBtnBlack.classList.remove("active");
+        });
+        this.probeBtnBlack.addEventListener("click", () => {
+            this.activeProbe = "black";
+            this.probeBtnBlack.classList.add("active");
+            this.probeBtnRed.classList.remove("active");
+        });
+    }
+
     // ===== SCENARIOS =====
     buildScenarios() {
         this.scenarioBar.innerHTML = "";
@@ -821,7 +858,7 @@ class Multimeter {
 
         this.benchLabel.innerHTML = `<span>${s.label}</span> &mdash; ${s.desc}`;
         this.benchStatus.className = "bench-status info";
-        this.benchStatus.textContent = `Click to place red probe · Right-click to place black probe`;
+        this.benchStatus.textContent = `Tap Red or Black probe button, then tap a test point`;
         this.updateDisplay();
     }
 
@@ -831,17 +868,14 @@ class Multimeter {
             el.style.cursor = "pointer";
             el.addEventListener("click", (e) => {
                 const tp = el.getAttribute("data-tp");
-                this.redProbeTp = tp;
+                if (this.activeProbe === "red") {
+                    this.redProbeTp = tp;
+                } else {
+                    this.blackProbeTp = tp;
+                }
                 this.updateProbeLines();
                 this.updateDisplay();
                 e.stopPropagation();
-            });
-            el.addEventListener("contextmenu", (e) => {
-                e.preventDefault();
-                const tp = el.getAttribute("data-tp");
-                this.blackProbeTp = tp;
-                this.updateProbeLines();
-                this.updateDisplay();
             });
         });
 
@@ -935,7 +969,7 @@ class Multimeter {
 
         const tp = this.redProbeTp;
         if (!tp) {
-            return { value: "---", unit: "", extra: "Click to place red probe · Right-click for black probe" };
+            return { value: "---", unit: "", extra: "Tap Red or Black probe button, then tap a test point" };
         }
 
         // Check for dangerous settings
@@ -1025,7 +1059,7 @@ class Multimeter {
     updateHelp() {
         const mode = MODES[this.modeIdx];
         const help = {
-            OFF: "<p>Turn the dial to select a measurement mode, then choose a scenario above.</p>",
+            OFF: "<p>Turn the dial to a measurement mode, then choose a scenario below. Tap Red or Black probe button, then tap test points on the device.</p>",
             ACV: "<p><strong>AC Voltage (V~)</strong><br>Black → COM, Red → VΩ.<br>Test outlets, panels, and line voltage.<br>Expect ~120V residential, ~240V large appliances.</p>",
             DCV: "<p><strong>DC Voltage (V--)</strong><br>Black → COM, Red → VΩ.<br>Red to positive (+), black to negative (-).<br>Expect ~12.6V car battery, 5V USB, 24V controls.</p>",
             ACA: "<p><strong>AC Current (A~)</strong><br>Use clamp around ONE conductor.<br>Don't clamp around multiple wires — readings cancel.</p>",
