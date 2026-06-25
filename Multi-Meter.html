@@ -168,6 +168,8 @@
             pointer-events: visible;
         }
         .test-point:hover { opacity: 0.9 !important; }
+        .test-point.tp-red { fill: rgba(255,50,50,0.35) !important; stroke: #ff3333 !important; stroke-width: 3 !important; }
+        .test-point.tp-black { fill: rgba(50,50,50,0.45) !important; stroke: #666 !important; stroke-width: 3 !important; }
         .test-point.active-ring { animation: pulse-ring 1s infinite; }
         @keyframes pulse-ring {
             0%, 100% { opacity: 0.6; }
@@ -283,10 +285,10 @@
                 <svg viewBox="0 0 400 280" width="400" height="280" style="max-width:100%;height:auto;">
                     <rect x="0" y="0" width="400" height="280" fill="transparent"/>
                     <text x="200" y="130" fill="#555" font-size="16" text-anchor="middle" font-family="Arial,sans-serif">Select a scenario above to begin testing</text>
-                    <text x="200" y="155" fill="#444" font-size="13" text-anchor="middle" font-family="Arial,sans-serif">Click test points to place the red probe</text>
+                    <text x="200" y="155" fill="#444" font-size="13" text-anchor="middle" font-family="Arial,sans-serif">Click red probe · Right-click black probe</text>
                 </svg>
             </div>
-            <div class="bench-status info" id="benchStatus">&#128161; Choose a scenario, then click test points on the device</div>
+            <div class="bench-status info" id="benchStatus">&#128161; Choose a scenario, then click to place red probe · right-click for black probe</div>
 
             <!-- Probe wires overlay -->
             <svg class="probe-overlay" id="probeOverlay" viewBox="0 0 400 280" preserveAspectRatio="xMidYMid meet" style="position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;">
@@ -358,15 +360,19 @@ const SCENARIOS = [
         // Test point positions for probe lines (relative to viewBox 400x280)
         tpPos: { hot: [154,125], neutral: [154,100], ground: [154,142], hot2: [224,125], neutral2: [224,100], ground2: [224,142] },
         // Reading function per probe placement
-        getReading: function(tp, mode) {
+        getReading: function(tp, mode, ref) {
+            const v = { hot:120, hot2:120, neutral:0, neutral2:0, ground:0, ground2:0 };
             if (mode === "ACV") {
-                if (tp === "hot" || tp === "hot2") return { value: (120+Math.random()*4).toFixed(1), unit: "V", extra: "Hot-neutral ~120V" };
-                if (tp === "neutral" || tp === "neutral2") return { value: "0.00", unit: "V", extra: "Neutral ~0V" };
-                if (tp === "ground" || tp === "ground2") return { value: "0.00", unit: "V", extra: "Ground ~0V" };
+                if (tp === ref) return { value: "0.00", unit: "V", extra: "Same point — 0V" };
+                const diff = Math.abs(v[tp] - v[ref]);
+                const label = `${tp}-${ref}`;
+                return { value: diff.toFixed(1), unit: "V", extra: `${tp} to ${ref} ~${diff}V` };
             }
             if (mode === "CONT") {
-                if (tp.includes("ground") || tp.includes("neutral")) return { value: "0.5", unit: "Ω", extra: "BEEP — good ground path" };
-                return { value: "OL", unit: "", extra: "No continuity to ground" };
+                if (tp === ref) return { value: "0.0", unit: "Ω", extra: "BEEP — same point" };
+                const isBonded = (tp.includes("neutral") || tp.includes("ground")) && (ref.includes("neutral") || ref.includes("ground"));
+                if (isBonded) return { value: (0.3+Math.random()*0.4).toFixed(1), unit: "Ω", extra: "BEEP — neutral/ground bonded" };
+                return { value: "OL", unit: "", extra: "Open — no continuity" };
             }
             return null;
         },
@@ -408,12 +414,15 @@ const SCENARIOS = [
             <text x="200" y="215" fill="#999" font-size="10" text-anchor="middle" font-family="Arial,sans-serif">NEMA 14-30R 240V</text>
         `,
         tpPos: { l1: [165,102], neutral: [192,102], l2: [219,102], ground: [192,155] },
-        getReading: function(tp, mode) {
+        getReading: function(tp, mode, ref) {
+            const v = { l1:120, l2:-120, neutral:0, ground:0 };
             if (mode === "ACV") {
-                if (tp === "l1") return { value: (120+Math.random()*4).toFixed(1), unit: "V", extra: "L1-N ~120V" };
-                if (tp === "l2") return { value: (120+Math.random()*4).toFixed(1), unit: "V", extra: "L2-N ~120V" };
-                if (tp === "neutral") return { value: "0.00", unit: "V", extra: "Neutral ~0V" };
-                if (tp === "ground") return { value: "0.00", unit: "V", extra: "Ground ~0V" };
+                if (tp === ref) return { value: "0.00", unit: "V", extra: "Same point — 0V" };
+                const diff = Math.abs(v[tp] - v[ref]);
+                const label = `${tp} to ${ref}`;
+                let extra = `${label} ~${diff}V`;
+                if (diff > 200) extra += " — 240V circuit!";
+                return { value: diff.toFixed(1), unit: "V", extra: extra };
             }
             return null;
         },
@@ -448,10 +457,19 @@ const SCENARIOS = [
             <text x="260" y="78" fill="#888" font-size="9" text-anchor="middle">NEG -</text>
         `,
         tpPos: { pos: [140,51], neg: [260,51] },
-        getReading: function(tp, mode) {
+        getReading: function(tp, mode, ref) {
+            const v = { pos:12.6, neg:0 };
             if (mode === "DCV") {
-                if (tp === "pos") return { value: (12.6+Math.random()*0.2).toFixed(2), unit: "V", extra: "12.6V = good battery" };
-                if (tp === "neg") return { value: "0.00", unit: "V", extra: "Negative terminal ~0V" };
+                if (tp === ref) return { value: "0.00", unit: "V", extra: "Same point — 0V" };
+                const diff = v[tp] - v[ref];
+                const sign = diff >= 0 ? "+" : "";
+                let extra = `Red=${tp}, Black=${ref}  ${sign}${diff.toFixed(2)}V`;
+                if (diff < 0) extra += " — probes reversed!";
+                if (Math.abs(diff) > 12) extra += " — healthy battery";
+                return { value: Math.abs(diff).toFixed(2), unit: "V", extra: extra };
+            }
+            if (mode === "ACV") {
+                return { value: "---", unit: "", extra: "Use DCV (V--) for battery — not ACV" };
             }
             return null;
         },
@@ -481,12 +499,12 @@ const SCENARIOS = [
             <text x="280" y="170" fill="#888" font-size="9" text-anchor="middle">End 2</text>
         `,
         tpPos: { end1: [120,136], end2: [280,136] },
-        getReading: function(tp, mode) {
-            if (mode === "CONT") {
-                return { value: (0.5+Math.random()*2).toFixed(1), unit: "Ω", extra: "BEEP — fuse is good! <5Ω" };
-            }
-            if (mode === "OHM") {
-                return { value: (0.5+Math.random()*2).toFixed(1), unit: "Ω", extra: "Good fuse ~0.5-2Ω" };
+        getReading: function(tp, mode, ref) {
+            if (mode === "CONT" || mode === "OHM") {
+                if (tp === ref) return { value: "0.0", unit: "Ω", extra: "BEEP — same point" };
+                const r = (0.3+Math.random()*1.5).toFixed(1);
+                const beep = mode === "CONT" ? "BEEP — " : "";
+                return { value: r, unit: "Ω", extra: `${beep}Good fuse ${r}Ω  (<5Ω = good)` };
             }
             return null;
         },
@@ -517,9 +535,10 @@ const SCENARIOS = [
             <text x="280" y="170" fill="#888" font-size="9" text-anchor="middle">End 2</text>
         `,
         tpPos: { end1: [120,136], end2: [280,136] },
-        getReading: function(tp, mode) {
+        getReading: function(tp, mode, ref) {
             if (mode === "CONT" || mode === "OHM") {
-                return { value: "OL", unit: "", extra: "No continuity — fuse is blown" };
+                if (tp === ref) return { value: "0.0", unit: "Ω", extra: "Same point — 0Ω" };
+                return { value: "OL", unit: "", extra: "No continuity — fuse is blown (open)" };
             }
             return null;
         },
@@ -553,12 +572,12 @@ const SCENARIOS = [
             <text x="200" y="210" fill="#666" font-size="10" text-anchor="middle" font-family="Arial,sans-serif">240V 5kW Heating Element</text>
         `,
         tpPos: { t1: [142,89], t2: [258,89] },
-        getReading: function(tp, mode) {
-            if (mode === "OHM") {
-                return { value: (12+Math.random()*6).toFixed(1), unit: "Ω", extra: "Good element ~12-18Ω   R = V²/P" };
-            }
-            if (mode === "CONT") {
-                return { value: (12+Math.random()*6).toFixed(1), unit: "Ω", extra: "BEEP — element has continuity" };
+        getReading: function(tp, mode, ref) {
+            if (mode === "OHM" || mode === "CONT") {
+                if (tp === ref) return { value: "0.0", unit: "Ω", extra: "Same point — 0Ω" };
+                const r = (12+Math.random()*6).toFixed(1);
+                const beep = mode === "CONT" ? "BEEP — " : "";
+                return { value: r, unit: "Ω", extra: `${beep}Heating element ${r}Ω   (12-18Ω = good)` };
             }
             return null;
         },
@@ -802,7 +821,7 @@ class Multimeter {
 
         this.benchLabel.innerHTML = `<span>${s.label}</span> &mdash; ${s.desc}`;
         this.benchStatus.className = "bench-status info";
-        this.benchStatus.textContent = `Click test points on the ${s.label.toLowerCase()} to place the red probe. Black probe on reference.`;
+        this.benchStatus.textContent = `Click to place red probe · Right-click to place black probe`;
         this.updateDisplay();
     }
 
@@ -817,6 +836,13 @@ class Multimeter {
                 this.updateDisplay();
                 e.stopPropagation();
             });
+            el.addEventListener("contextmenu", (e) => {
+                e.preventDefault();
+                const tp = el.getAttribute("data-tp");
+                this.blackProbeTp = tp;
+                this.updateProbeLines();
+                this.updateDisplay();
+            });
         });
 
         // Reset probe lines
@@ -830,9 +856,25 @@ class Multimeter {
         const s = this.activeScenario;
         if (!s) return;
 
-        // Get the SVG element's position relative to the viewBox
         const svgEl = this.benchSvg.querySelector("svg");
         if (!svgEl) return;
+
+        // Reset all test point highlights and re-apply original strokes
+        const tpStroke = {
+            outlet120: { neutral:"#4ade80", neutral2:"#4ade80", hot:"#f59e0b", hot2:"#f59e0b", ground:"#60a5fa", ground2:"#60a5fa" },
+            dryer240: { l1:"#f59e0b", l2:"#f59e0b", neutral:"#4ade80", ground:"#60a5fa" },
+            carBattery: { pos:"#f59e0b", neg:"#4ade80" },
+            goodFuse: { end1:"#4ade80", end2:"#4ade80" },
+            blownFuse: { end1:"#f87171", end2:"#f87171" },
+            heaterElement: { t1:"#f59e0b", t2:"#f59e0b" },
+        };
+        const strokes = tpStroke[s.id] || {};
+        svgEl.querySelectorAll(".test-point").forEach(el => {
+            const tp = el.getAttribute("data-tp");
+            el.classList.remove("tp-red", "tp-black");
+            el.setAttribute("fill", "transparent");
+            if (strokes[tp]) el.setAttribute("stroke", strokes[tp]);
+        });
 
         // Probe line from meter VΩ port area to the test point on the bench SVG
         // We overlay on the bench SVG viewBox (400x280)
@@ -840,6 +882,16 @@ class Multimeter {
         // in the bench viewBox coordinates
         const meterPortX = 340, meterPortY = 260;
         const meterComX = 280, meterComY = 260;
+
+        // Highlight test points with probes
+        if (this.redProbeTp) {
+            const el = svgEl.querySelector(`.test-point[data-tp="${this.redProbeTp}"]`);
+            if (el) { el.classList.add("tp-red"); el.setAttribute("fill", "rgba(255,50,50,0.35)"); }
+        }
+        if (this.blackProbeTp) {
+            const el = svgEl.querySelector(`.test-point[data-tp="${this.blackProbeTp}"]`);
+            if (el) { el.classList.add("tp-black"); el.setAttribute("fill", "rgba(50,50,50,0.45)"); }
+        }
 
         // Red probe line
         if (this.redProbeTp && s.tpPos[this.redProbeTp]) {
@@ -883,7 +935,7 @@ class Multimeter {
 
         const tp = this.redProbeTp;
         if (!tp) {
-            return { value: "---", unit: "", extra: "Click a test point to place the red probe" };
+            return { value: "---", unit: "", extra: "Click to place red probe · Right-click for black probe" };
         }
 
         // Check for dangerous settings
@@ -897,10 +949,10 @@ class Multimeter {
             return { value: "DANGER", unit: "", extra: "Ohms on 10A port! Move red lead to VΩ" };
         }
 
-        // Get scenario-specific reading
-        const r = s.getReading(tp, mode);
+        // Get scenario-specific reading using red and black probe positions
+        const ref = this.blackProbeTp;
+        const r = s.getReading(tp, mode, ref);
         if (r) {
-            // Beep for continuity
             if (mode === "CONT" && r.value !== "OL") this.beepSound();
             return r;
         }
